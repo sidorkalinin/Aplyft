@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="iN0-l3-epB">
+            <rect key="frame" x="0.0" y="0.0" width="550" height="706"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="8ag-At-3ef">
+                    <rect key="frame" x="0.0" y="0.0" width="550" height="706"/>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-white" translatesAutoresizingMaskIntoConstraints="NO" id="Ahh-CC-td7">
+                    <rect key="frame" x="184.5" y="294.5" width="181" height="117"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="181" id="DC4-lw-yoE"/>
+                        <constraint firstAttribute="height" constant="117" id="P96-6T-99a"/>
+                    </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="TRAIN-SMART" translatesAutoresizingMaskIntoConstraints="NO" id="3XQ-Df-7YY">
+                    <rect key="frame" x="184.5" y="582" width="181" height="44"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="44" id="P5b-JT-Mf5"/>
+                        <constraint firstAttribute="width" constant="181" id="XRf-aY-j5R"/>
+                    </constraints>
+                </imageView>
+            </subviews>
+            <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="8ag-At-3ef" secondAttribute="bottom" id="CIm-sp-Y7f"/>
+                <constraint firstItem="Ahh-CC-td7" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="H8P-hv-K0F"/>
+                <constraint firstItem="8ag-At-3ef" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="OHS-M5-J8J"/>
+                <constraint firstItem="8ag-At-3ef" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="enk-Vl-dS4"/>
+                <constraint firstAttribute="bottom" secondItem="3XQ-Df-7YY" secondAttribute="bottom" constant="80" id="hVy-L2-b9Z"/>
+                <constraint firstAttribute="trailing" secondItem="8ag-At-3ef" secondAttribute="trailing" id="mVG-Mn-POq"/>
+                <constraint firstItem="3XQ-Df-7YY" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="ns8-Ee-Umy"/>
+                <constraint firstItem="Ahh-CC-td7" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="xl1-ch-3tY"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="583" y="568"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="TRAIN-SMART" width="215" height="22"/>
+        <image name="background" width="1242" height="2214"/>
+        <image name="logo-white" width="181" height="117"/>
+    </resources>
+</document>

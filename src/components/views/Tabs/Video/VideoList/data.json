@@ -1,0 +1,18 @@
+[
+	{
+		"id" : 1,
+		"video_picture_url" : "https://placehold.it/300x300",
+		"video_url" : "https://www.youtube.com/watch?v=5DFAcAvT2mI",
+		"title" : "Chest Workout",
+		"description" : "Coach: Roger Yahchouchi",
+		"tags": ["chest", "front"]
+	},
+	{
+		"id" : 2,
+		"video_picture_url" : "https://placehold.it/300x300",
+		"video_url" : "https://www.youtube.com/watch?v=MVMNk0HiTMg",
+		"title" : "Squats",
+		"description" : "Coach: Roger Yahchouchi",
+		"tags": ["squats", "legs"]
+	}
+]

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "1",
+    "title": "Meal 1",
+    "Rec_Calories": "1000",
+    "Acc_Calories": "1800",
+    "data": {
+      "Rec_Protein": "30",
+      "Rec_Carbs": "20",
+      "Rec_Fiber": "10",
+      "Rec_Cholesterol": "32",
+      "Rec_Sodium": "12",
+      "Rec_Fats": "3",
+      "Rec_Water": "14",
+      "Rec_Sugar": "4",
+      "Acc_Protein": "35",
+      "Acc_Carbs": "21",
+      "Acc_Fiber": "13",
+      "Acc_Cholesterol": "16",
+      "Acc_Sodium": "10",
+      "Acc_Fats": "33",
+      "Acc_Water": "4",
+      "Acc_Sugar": "5"
+    }
+  },
+  {
+    "id": "2",
+    "title": "Meal 2",
+    "Rec_Calories": "1000",
+    "Acc_Calories": "2000",
+    "data": {
+      "Rec_Protein": "30",
+      "Rec_Carbs": "20",
+      "Rec_Fiber": "10",
+      "Rec_Cholesterol": "32",
+      "Rec_Sodium": "12",
+      "Rec_Fats": "3",
+      "Rec_Water": "14",
+      "Rec_Sugar": "4",
+      "Acc_Protein": "35",
+      "Acc_Carbs": "21",
+      "Acc_Fiber": "13",
+      "Acc_Cholesterol": "16",
+      "Acc_Sodium": "10",
+      "Acc_Fats": "33",
+      "Acc_Water": "4",
+      "Acc_Sugar": "5"
+    }
+  },
+  {
+    "id": "3",
+    "title": "Meal 3",
+    "Rec_Calories": "2000",
+    "Acc_Calories": "1500",
+    "data": {
+      "Rec_Protein": "30",
+      "Rec_Carbs": "20",
+      "Rec_Fiber": "10",
+      "Rec_Cholesterol": "32",
+      "Rec_Sodium": "12",
+      "Rec_Fats": "3",
+      "Rec_Water": "14",
+      "Rec_Sugar": "4",
+      "Acc_Protein": "35",
+      "Acc_Carbs": "21",
+      "Acc_Fiber": "13",
+      "Acc_Cholesterol": "16",
+      "Acc_Sodium": "10",
+      "Acc_Fats": "33",
+      "Acc_Water": "4",
+      "Acc_Sugar": "5"
+    }
+  }
+]

@@ -1,0 +1,360 @@
+[
+    {
+    	"key": 5, // parent
+    	"only_main_category": false, // this boolean is used when the user need to select only the title
+    	"icon" : "basketball",
+    	"icon_active" : "basketball_active",
+		"title": "Basketball",
+		"active": true,
+		"required_positions": [
+			{
+				"id": 28, // categoty id
+				"title" : "Guard"
+			},
+			{
+				"id": 29,
+				"title" : "Forward"
+			}
+		],
+    	"data": [
+			{
+				"id": 1,
+				"title": "Gain Speed"
+			},
+			{
+				"id": 3,
+				"title": "Gain Strength"
+			},
+			{
+				"id": 2,
+				"title": "Improve Agility"
+			},
+			{
+				"id": 7,
+				"title": "Improve Coordination"
+			},
+			{
+				"id": 4,
+				"title": "Increase Endurance"
+			},
+			{
+				"id": 8,
+				"title": "Increase Explosiveness"
+			},
+			{
+				"id": 9,
+				"title": "Increase Flexibility"
+			},
+			{
+				"id": 6,
+				"title": "Increase Linear Jump"
+			},
+			{
+				"id": 5,
+				"title": "Increase Vertical Jump"
+			}
+		]
+	},
+	{
+		"key": 27,
+    	"only_main_category": true,
+    	"icon" : "running",
+    	"icon_active" : "running_active",
+		"title": "Track & Field",
+		"active": true,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 10,
+				"title": "Gain Speed (Sprinting)"
+			},
+			{
+				"id": 11,
+				"title": "Gain Endurance (for Long Distance > 5km)"
+			},
+			{
+				"id": 12,
+				"title": "Gain Resistance (for Medium Distance 2-5km)"
+			}
+		]
+	},
+	{
+		"key": 7,
+    	"only_main_category": true,
+    	"icon" : "baseball",
+    	"icon_active" : "baseball_active",
+		"title": "Baseball",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 13,
+				"title": "Gain Speed"
+			},
+			{
+				"id": 14,
+				"title": "Improve Coordination"
+			},
+			{
+				"id": 15,
+				"title": "Increase Endurance"
+			},
+			{
+
+				"id": 16,
+				"title": "Gain Strength"
+			},
+			{
+				"id": 17,
+				"title": "Improve Flexibility"
+			}
+		]
+	},
+	{
+		"key": 8,
+    	"only_main_category": true,
+    	"icon" : "boxing",
+    	"icon_active" : "boxing_active",
+		"title": "Boxing",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 18,
+				"title": "Improve Coordination"
+			},
+			{
+				"id": 19,
+				"title": "Gain Strength"
+			},
+			{
+				"id": 20,
+				"title": "Increase Explosiveness"
+			},
+			{
+				"id": 21,
+				"title": "Increase Endurance"
+			},
+			{
+				"id": 22,
+				"title": "Increase Flexibility"
+			},
+			{
+				"id": 23,
+				"title": "Increase Agility"
+			}
+		]
+	},
+	{
+		"key": 9,
+    	"only_main_category": true,
+    	"icon" : "hockey",
+    	"icon_active" : "hockey_active",
+		"title": "Hockey (position)",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 24,
+				"title": "Gain Strength"
+			},
+			{
+				"id": 25,
+				"title": "Improve Balance"
+			},
+			{
+				"id": 26,
+				"title": "Improve Agility"
+			},
+			{
+				"id": 27,
+				"title": "Improve Flexibility"
+			},
+			{
+				"id": 28,
+				"title": "Improve Coordination"
+			},
+			{
+				"id": 29,
+				"title": "Increase Endurance"
+			}
+		]
+	},
+	{
+		"key": 10,
+    	"only_main_category": true,
+    	"icon" : "football",
+    	"icon_active" : "football_active",
+		"title": "Football (position)",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+			{
+				"id": 31,
+				"title": "Improve Agility"
+			},
+			{
+				"id": 33,
+				"title": "Increase Endurance"
+			},
+			{
+				"id": 34,
+				"title": "Increase Vertical Jump"
+			},
+			{
+				"id": 35,
+				"title": "Increase Linear Jump"
+			},
+			{
+				"id": 36,
+				"title": "Improve Coordination"
+			},
+			{
+				"id": 37,
+				"title": "Increase Explosiveness"
+			},
+			{
+				"id": 38,
+				"title": "Improve Flexibility"
+			}
+		]
+	},
+	{
+		"key": 11,
+    	"only_main_category": true,
+    	"icon" : "martial_arts",
+    	"icon_active" : "martial_arts_active",
+		"title": "Martial Arts",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+		]
+	},
+	{
+		"key": 12,
+    	"only_main_category": true,
+    	"icon" : "rugby",
+    	"icon_active" : "rugby_active",
+		"title": "Rugby (position)",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+		]
+	},
+	{
+		"key": 13,
+    	"only_main_category": true,
+    	"icon" : "soccer",
+    	"icon_active" : "soccer_active",
+		"title": "Soccer (position)",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+		]
+	},
+	{
+		"key": 14,
+    	"only_main_category": true,
+    	"icon" : "tennis",
+    	"icon_active" : "tennis_active",
+		"title": "Tennis",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+		]
+	},
+	{
+		"key": 15,
+    	"only_main_category": true,
+    	"icon" : "swimming",
+    	"icon_active" : "swimming_active",
+		"title": "Swimming",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+		]
+	},
+	{
+		"key": 16,
+    	"only_main_category": true,
+    	"icon" : "cycling",
+    	"icon_active" : "cycling_active",
+		"title": "Cycling",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+		]
+	},
+	{
+		"key": 17,
+    	"only_main_category": true,
+    	"icon" : "volleyball",
+    	"icon_active" : "volleyball_active",
+		"title": "Volleyball",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+		]
+	},
+	{
+		"key": 18,
+    	"only_main_category": true,
+    	"icon" : "wrestling",
+    	"icon_active" : "wrestling_active",
+		"title": "Wrestling",
+		"active": false,
+		"required_positions": [],
+		"select_sub" : false,
+		"data": [
+			{
+				"id": 30,
+				"title": "Gain Strength"
+			},
+		]
+	}
+	
+]

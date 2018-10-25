@@ -1,0 +1,211 @@
+{
+    "meta": {
+        "page": 0
+    },
+    "data": [
+        {
+            "type": "personal_trainer",
+            "id": "1",
+            "attributes": {
+                "is_nutritionist": "1",
+                "description": "Amen for that!",
+                "bio_speciality": "1234",
+                "certification_accreditation": "1",
+                "pending_requests": "0",
+                "rating": "5.0",
+                "unique_id": null
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "2"
+                    }
+                },
+                "category": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "1"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "http://192.168.1.212/aplyft/index.php/api/v1/personal_trainer/1"
+            }
+        },
+        {
+            "type": "personal_trainer",
+            "id": "2",
+            "attributes": {
+                "is_nutritionist": "1",
+                "description": "Bero the cool",
+                "bio_speciality": "1234",
+                "certification_accreditation": "1",
+                "pending_requests": "1",
+                "rating": "4.0",
+                "unique_id": null
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "16"
+                    }
+                },
+                "category": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "1"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "http://192.168.1.212/aplyft/index.php/api/v1/personal_trainer/2"
+            }
+        },
+        {
+            "type": "personal_trainer",
+            "id": "3",
+            "attributes": {
+                "is_nutritionist": "1",
+                "description": "Ramy el zenny the Big Guy",
+                "bio_speciality": "1234",
+                "certification_accreditation": "1",
+                "pending_requests": "0",
+                "rating": null,
+                "unique_id": null
+            },
+            "relationships": {
+                "user": {
+                    "data": {
+                        "type": "user",
+                        "id": "17"
+                    }
+                },
+                "category": {
+                    "data": [
+                        {
+                            "type": "category",
+                            "id": "1"
+                        }
+                    ]
+                }
+            },
+            "links": {
+                "self": "http://192.168.1.212/aplyft/index.php/api/v1/personal_trainer/3"
+            }
+        }
+    ],
+    "included": [
+        {
+            "type": "user",
+            "id": "2",
+            "attributes": {
+                "first_name": "bernardakl",
+                "last_name": "akl",
+                "email": "1",
+                "user_name": null,
+                "address": null,
+                "height": "1.76",
+                "dob": "1997-09-09",
+                "enc_password": null,
+                "salt_hash": null,
+                "signup_token": null,
+                "weight": "77.00",
+                "fb_id": null,
+                "google_id": null,
+                "country_of_residence": "1",
+                "activity_level": null,
+                "phone_number": "79174132",
+                "body_fat": "11.00",
+                "injury": "Left hand injury",
+                "photo_url": null,
+                "gender": "Male",
+                "blood_type": "A+",
+                "reset_token": null,
+                "day_of_workout": null,
+                "unique_id": null
+            }
+        },
+        {
+            "type": "category",
+            "id": "1",
+            "attributes": {
+                "name": "Strength & Conditionning",
+                "parent": null,
+                "description": null,
+                "price": "14",
+                "unique_id": null
+            },
+            "relationships": {
+                "sub_category": {
+                    "data": []
+                }
+            }
+        },
+        {
+            "type": "user",
+            "id": "16",
+            "attributes": {
+                "first_name": "bernard",
+                "last_name": "akl",
+                "email": "12",
+                "user_name": null,
+                "address": "Balllouneh",
+                "height": "172",
+                "dob": "1992-05-01",
+                "enc_password": null,
+                "salt_hash": null,
+                "signup_token": null,
+                "weight": "73.00",
+                "fb_id": null,
+                "google_id": null,
+                "country_of_residence": "3",
+                "activity_level": "1",
+                "phone_number": "79175135",
+                "body_fat": "12.00",
+                "injury": "none",
+                "photo_url": null,
+                "gender": "male",
+                "blood_type": "A+",
+                "reset_token": null,
+                "day_of_workout": "65",
+                "unique_id": null
+            }
+        },
+        {
+            "type": "user",
+            "id": "17",
+            "attributes": {
+                "first_name": "Ramy",
+                "last_name": "Zenny",
+                "email": "aaaa@aooooaaa.com",
+                "user_name": null,
+                "address": null,
+                "height": null,
+                "dob": null,
+                "enc_password": null,
+                "salt_hash": null,
+                "signup_token": null,
+                "weight": null,
+                "fb_id": null,
+                "google_id": null,
+                "country_of_residence": null,
+                "activity_level": null,
+                "phone_number": null,
+                "body_fat": null,
+                "injury": null,
+                "photo_url": null,
+                "gender": null,
+                "blood_type": null,
+                "reset_token": null,
+                "day_of_workout": null,
+                "unique_id": null
+            }
+        }
+    ]
+}

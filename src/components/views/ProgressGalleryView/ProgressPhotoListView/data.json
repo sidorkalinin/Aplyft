@@ -1,0 +1,23 @@
+[
+	{
+		"id": "1",
+		"url": "https://videos-aplyft.s3.amazonaws.com/aplyft/thumbnails/f05-03.jpg",
+		"token": "123123",
+		"type": "img",
+		"date": "2018-05-07",
+	},
+	{
+		"id": "2",
+		"url": "https://videos-aplyft.s3.amazonaws.com/aplyft/thumbnails/f05-04.jpg",
+		"token": "123123",
+		"type": "img",
+		"date": "2018-05-07",
+	},
+	{
+		"id": "3",
+		"url": "https://videos-aplyft.s3.amazonaws.com/aplyft/thumbnails/f05-05.jpg",
+		"token": "123123",
+		"type": "img",
+		"date": "2018-05-07",
+	}
+]

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "359816223136",
+    "firebase_url": "https://aplyft-7297a.firebaseio.com",
+    "project_id": "aplyft-7297a",
+    "storage_bucket": "aplyft-7297a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359816223136:android:910c96f7cf1a6c64",
+        "android_client_info": {
+          "package_name": "com.aplyft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "359816223136-gupe126at1scem8genva09d5om3h3e4t.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLjcwMjSJttbnujf7xaoDJeaf7aNOT_AA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

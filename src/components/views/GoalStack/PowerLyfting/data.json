@@ -1,0 +1,63 @@
+[
+	{
+		"id" : 22,
+		"text": "Offseason",
+		"data" : [
+			{
+				"id": 100,
+				"text": "Current Max Bench"
+			},
+			{
+				"id" : 101,
+				"text": "Target Max Bench"
+			},
+			{
+				"id": 98,
+				"text": "Current Max SQ"
+			},
+			{
+				"id" : 99,
+				"text": "Target Max SQ"
+			},
+			{
+				"id": 96,
+				"text": "Current Max DL"
+			},
+			{
+				"id" : 97,
+				"text": "Target Max DL"
+			}
+		]
+	},
+	{
+		"id" : 23,
+		"text": "Meet Prep",
+		"data" : [
+			{
+				"id": 95,
+				"text": "Current Max Bench"
+			},
+			{
+				"id" : 94,
+				"text": "Target Max Bench"
+			},
+			{
+				"id" : 93,
+				"text": "Current Max SQ"
+			},
+			{
+				"id" : 92,
+				"text": "Target Max SQ"
+			},
+			{
+				"id" : 91,
+				"text": "Current Max DL"
+			},
+			{
+				"id" : 90,
+				"text": "Target Max DL"
+			}
+		]
+	}
+	
+]

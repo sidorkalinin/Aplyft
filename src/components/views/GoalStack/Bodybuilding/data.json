@@ -1,0 +1,22 @@
+[
+	{
+		"id": 25,
+		"text": "Gain Muscle",
+		"type" : "radio",
+		"icon" : "getMassive",
+		"extra": ""
+	},
+	{
+		"id": 26,
+		"text": "Get Lean",
+		"type" : "radio",
+		"icon" : "getLean",
+		"extra": ""
+	},
+	{
+		"id": 3,
+		"text" : "Specify current body weight and fat %",
+		"type" : "picker"
+	}
+
+]

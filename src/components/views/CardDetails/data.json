@@ -1,0 +1,20 @@
+[
+	{
+		"default": true,
+		"card_id": "card_1Cv3PIHSVDGhnQLNb7kDzoVZ",
+		"card_last4" :"4242",
+		"card_brand" :"visa",
+		"card_exp_month": "08",
+		"card_exp_year": "2018",
+		"card_holder": "Charles",
+	},
+		{
+			"default": false,
+			"card_id": "card_1Cv3PIHSVDGhnQLNb7kDzoVZ",
+			"card_last4" :"4242",
+			"card_brand" :"visa",
+			"card_exp_month": "08",
+			"card_exp_year": "2018",
+			"card_holder": "Charles",
+		}
+]
