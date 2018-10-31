@@ -13,9 +13,9 @@ export const IOS_SYMLINK =
 export const GOOGLE_PLAY_SYMLINK = "market://details?id=com.brightlab.aplyft";
 
 // endpoint API
-export const PROTOCOL = "http://";
-export const URI = PROTOCOL + "192.168.1.213:9090"; //"appx.aplyft.com"; //"appx.aplyft.com";
-export const API = URI + "/api"; // "/aplyft/api/v1";
+export const PROTOCOL = "https://";
+export const URI = PROTOCOL + "appx.aplyft.com"; //"appx.aplyft.com";
+export const API = URI + "/api";
 
 // user session related enpoints
 export const LOGIN_URI = API + "/login/"; //Changed TO the NEW Endpoint
