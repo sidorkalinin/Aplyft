@@ -185,49 +185,26 @@ class DailyNutritionScreen extends PureComponent {
     var OAUTH_REQUEST_URL = `${REQUEST_URL}?${NORMALISED_PARAMETERS}&oauth_signature=${OAUTH_SIGNATURE_BASE64_ENCODED}`;
     // Send the Request
 
-    // var primary_key_date = moment().format("YYYY-MM-DD, h:mm:ss");
-    // var todaye_date = moment(payload.workout_date).format("YYYY-MM-DD");
-    // console.log("todaye_date is: ", todaye_date);
-    // console.log("primary_key_date is: ", primary_key_date);
-    // console.log("workoutDate is: ", payload.workout_date);
-    // console.log("proteinValue is: ", payload.proteinValue);
-    //
-    // if (payload.id == "" || payload.id == undefined) {
-    //   console.log(
-    //     "I am in the action where the payload.id is emptyString or undefined"
-    //   );
-    //   var meal_to_be_inserted = {
-    //     id: primary_key_date + "NOTLOGGED",
-    //     name: payload.mealtitle,
-    //     date: todaye_date,
-    //     acc_calories: String(payload.totalCalories || ""),
-    //     protein_intake: String(payload.proteinValue || ""),
-    //     carbs_intake: String(payload.carbsValue || ""),
-    //     fats_intake: String(payload.fatsValue || ""),
-    //     fiber_intake: String(payload.fiberValue || ""),
-    //     sugar_intake: String(payload.sugarValue || ""),
-    //     cholesterol_intake: String(payload.cholesterolValue || ""),
-    //     sodium_intake: String(payload.sodiumValue || ""),
-    //     water_intake: String(payload.waterValue || "")
-    //   };
     axios.get(OAUTH_REQUEST_URL)
       .then(response => {
         if (response.data.food_entries) {
-          if (response.data.food_entries.food_entry.length > 0) {
+          if (Array.isArray(response.data.food_entries.food_entry)) {
             response.data.food_entries.food_entry.forEach(meal => {
-              this.props.addMeal({
-                mealtitle: meal.meal,
-                workout_date: new Date(),
-                totalCalories: meal.calories,
-                proteinValue: meal.protein,
-                carbsValue: meal.carbohydrate,
-                fatsValue: meal.fat,
-                fiberValue: meal.fiber,
-                sugarValue:meal.sugar,
-                cholesterolValue: meal.cholesterol,
-                sodiumValue: meal.sodium,
-                waterValue: meal.water
-              })
+              setTimeout(() => {
+                this.props.addMeal({
+                  mealtitle: meal.meal,
+                  workout_date: new Date(),
+                  totalCalories: meal.calories,
+                  proteinValue: meal.protein,
+                  carbsValue: meal.carbohydrate,
+                  fatsValue: meal.fat,
+                  fiberValue: meal.fiber,
+                  sugarValue:meal.sugar,
+                  cholesterolValue: meal.cholesterol,
+                  sodiumValue: meal.sodium,
+                  waterValue: meal.water
+                })
+              }, 300)
             })
           } else {
             const meal = response.data.food_entries.food_entry;
