@@ -189,7 +189,7 @@ class DailyNutritionScreen extends PureComponent {
       .then(response => {
         if (response.data.food_entries) {
           if (Array.isArray(response.data.food_entries.food_entry)) {
-            response.data.food_entries.food_entry.forEach(meal => {
+            response.data.food_entries.food_entry.forEach((meal, index) => {
               setTimeout(() => {
                 this.props.addMeal({
                   mealtitle: meal.meal,
@@ -204,7 +204,7 @@ class DailyNutritionScreen extends PureComponent {
                   sodiumValue: meal.sodium,
                   waterValue: meal.water
                 })
-              }, 300)
+              }, 1000 * index)
             })
           } else {
             const meal = response.data.food_entries.food_entry;
