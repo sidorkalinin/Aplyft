@@ -313,6 +313,8 @@ var parseReturnFromServer = (response, getState) => {
       gender: String(user.gender) || "",
       height: String(user.height) || "",
       weight: String(user.weight) || "",
+      fatsecretAuthToken: String(user.fatsecret_auth_token) || "",
+      fatsecretAuthSecret: String(user.fatsecret_auth_secret) || "",
       preferedWorkoutDays: String(user.day_of_workout) || null,
       activityLevel: String(user.activity_level) || null,
       dateOfBirth: new Date(user.dob) || null,

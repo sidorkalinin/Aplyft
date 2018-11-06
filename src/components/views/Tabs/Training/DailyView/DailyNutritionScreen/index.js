@@ -3,6 +3,7 @@ import { Alert } from "react-native";
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
 import moment from "moment";
+import realm from '../../../../../../models';
 import {
   View,
   Text,
@@ -61,7 +62,14 @@ class DailyNutritionScreen extends PureComponent {
   /// fatsecret ////
 
   _onPressImportFromFatsecret = () => {
-    this.perform3LeggedOauthAuthentication();
+    var fatsecretAuthToken = realm.objects("UserModel")[0].fatsecretAuthToken;
+    var fatsecretAuthSecret = realm.objects("UserModel")[0].fatsecretAuthSecret;
+
+    if (fatsecretAuthToken) {
+      this.importFood({authToken: fatsecretAuthToken, authSecret: fatsecretAuthSecret});
+    } else {
+      this.perform3LeggedOauthAuthentication();
+    }
   }
 
   perform3LeggedOauthAuthentication = () => {
@@ -134,14 +142,27 @@ class DailyNutritionScreen extends PureComponent {
 
     return axios.get(OAUTH_REQUEST_URL)
       .then(response => {
-        this.importFood(response.data);
+        var authToken = response.data.split('&')[0].split('=')[1]
+        var authSecret = response.data.split('&')[1].split('=')[1]
+        this.importFood({
+          authToken,
+          authSecret
+        });
+
+        realm.write(() => {
+          realm.create("UserModel", {
+            fatsecretAuthToken: authToken,
+            fatsecretAuthSecret: authSecret,
+            id: realm.objects("UserModel")[0].id,
+          }, true);
+        })
       })
       .catch(error => {
         debugger
       });
   }
 
-  importFood = (userSecretsString) => {
+  importFood = (userSecrets) => {
     const authSecret = 'ea12df2f07644606b3017061c6eed82f'
     const authToken = '1d5e4309592e4b1bb104522ac597f2d4'
     /////
@@ -165,7 +186,7 @@ class DailyNutritionScreen extends PureComponent {
     NORMALISED_PARAMETERS += '&oauth_nonce='+OAUTH_NONCE;
     NORMALISED_PARAMETERS += '&oauth_signature_method='+OAUTH_SIGNATURE_METHOD;
     NORMALISED_PARAMETERS += '&oauth_timestamp='+OAUTH_TIMESTAMP;
-    NORMALISED_PARAMETERS += '&oauth_token='+userSecretsString.split('&')[0].split('=')[1];
+    NORMALISED_PARAMETERS += '&oauth_token='+userSecrets.authToken;
     NORMALISED_PARAMETERS += '&oauth_version='+OAUTH_VERSION;
 
     NORMALISED_PARAMETERS_ENCODED = encodeURIComponent(NORMALISED_PARAMETERS);
@@ -173,7 +194,7 @@ class DailyNutritionScreen extends PureComponent {
     var BASE_STRING = `${REQUEST_METHOD}&${REQUEST_URL_ENCODED}&${NORMALISED_PARAMETERS_ENCODED}`;
 
     // Calculate the Signature value
-    var oauthSecretToken = userSecretsString.split('&')[1].split('=')[1]
+    var oauthSecretToken = userSecrets.authSecret
     SHARED_SECRET+='&'+oauthSecretToken; // no user, & needed
 
     var OAUTH_SIGNATURE = CryptoJS.HmacSHA1(BASE_STRING, SHARED_SECRET);

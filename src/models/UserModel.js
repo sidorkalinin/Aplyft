@@ -6,6 +6,8 @@ UserModel.schema = {
   primaryKey: "id",
   properties: {
     id: { type: "string" },
+    fatsecretAuthSecret: { type: "string", default: null, optional: true },
+    fatsecretAuthToken: { type: "string", default: null, optional: true },
     fullname: { type: "string", default: null },
     firstName: { type: "string", default: null },
     lastName: { type: "string", default: null },
