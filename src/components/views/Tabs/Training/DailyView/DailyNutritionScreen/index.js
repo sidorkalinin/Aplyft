@@ -65,7 +65,7 @@ class DailyNutritionScreen extends PureComponent {
     var fatsecretAuthToken = realm.objects("UserModel")[0].fatsecretAuthToken;
     var fatsecretAuthSecret = realm.objects("UserModel")[0].fatsecretAuthSecret;
 
-    if (fatsecretAuthToken) {
+    if (fatsecretAuthToken && fatsecretAuthToken !== "undefined") {
       this.importFood({authToken: fatsecretAuthToken, authSecret: fatsecretAuthSecret});
     } else {
       this.perform3LeggedOauthAuthentication();
