@@ -6,14 +6,13 @@ import Mixpanel from "react-native-mixpanel";
 import firebase from "react-native-firebase";
 
 export const gotoSubPage = data => {
-  
-  if(Platform.OS != "android")
+  if (Platform.OS != "android")
     firebase.analytics().logEvent("GoalScreenChoosingGoalTypeBtnPressed");
-  
+
   Mixpanel.track("GoalScreen_Select Goal Type Btn Pressed");
   switch (data) {
     case "bodybuilding":
-      if(Platform.OS != "android")
+      if (Platform.OS != "android")
         firebase.analytics().logEvent("GoalScreenSelectBodybuilding");
       Mixpanel.track("GoalScreen_Select_bodybuilding");
       return {
@@ -22,7 +21,7 @@ export const gotoSubPage = data => {
       };
 
     case "powerlifting":
-      if(Platform.OS != "android")
+      if (Platform.OS != "android")
         firebase.analytics().logEvent("GoalScreenSelectPowerlifting");
       Mixpanel.track("GoalScreen_Select_powerlifting");
       return {
@@ -31,7 +30,7 @@ export const gotoSubPage = data => {
       };
 
     case "crossfit":
-      if(Platform.OS != "android")
+      if (Platform.OS != "android")
         firebase.analytics().logEvent("GoalScreenSelectcrosslyft");
       Mixpanel.track("GoalScreen_Select_crosslyft");
       return {
@@ -40,7 +39,7 @@ export const gotoSubPage = data => {
       };
 
     case "sportsspecific":
-      if(Platform.OS != "android")
+      if (Platform.OS != "android")
         firebase.analytics().logEvent("GoalScreenSelectathleticperformance");
       Mixpanel.track("GoalScreen_Select_athletic_performance");
       return {
@@ -79,9 +78,11 @@ const sendAndSave = (
   getState,
   requireNutritionPlan
 ) => {
-  if(Platform.OS != "android")
+  if (Platform.OS != "android")
     firebase.analytics().logEvent("GoalScreenSumbitGoalBtnPressed");
-  Mixpanel.trackWithProperties("GoalScreen_Sumbit Goal Btn Pressed", { category_id: categoryId });
+  Mixpanel.trackWithProperties("GoalScreen_Sumbit Goal Btn Pressed", {
+    category_id: categoryId
+  });
   var user = getState().user.user; // accessing other reducer from this one
 
   // faster for now only
@@ -108,49 +109,65 @@ const sendAndSave = (
       console.log("passed fields", Array.from(payload.fields));
 
       // splitting the fields into several json keys for readablity
-      var mixpanel_properties = { category_id : categoryId };
+      var mixpanel_properties = { category_id: categoryId };
       for (var key in payload.fields) {
         let row = payload.fields[key];
         // replacing the apce with underscore
         var _key = row.title.trim();
-        _key = _key.split(' ').join('_');
+        _key = _key.split(" ").join("_");
         mixpanel_properties[_key] = row.value;
       }
       // adding user unit
-      mixpanel_properties = { ...mixpanel_properties, units: user.units }; 
+      mixpanel_properties = { ...mixpanel_properties, units: user.units };
 
       // adding analytics
-      if(Platform.OS != "android")
+      if (Platform.OS != "android")
         firebase.analytics().logEvent("GoalScreenSumbitGoalSuccess");
-      Mixpanel.trackWithProperties("GoalScreen_Sumbit Goal Success", mixpanel_properties);
-      Mixpanel.registerSuperProperties({"Account type": "Free"});
+      Mixpanel.trackWithProperties(
+        "GoalScreen_Sumbit Goal Success",
+        mixpanel_properties
+      );
+      Mixpanel.registerSuperProperties({ "Account type": "Free" });
 
-      var fields = [];
-      for (var index in payload.fields) {
-        var row = payload.fields[index];
-        fields.push({
-          id: String(row.id),
-          title: row.title || "",
-          value: String(row.value)
-        });
-      }
-      try {
-        // add to realm
-        realm.write(() => {
-          // deleting all the fields before inserting new ones
-          realm.delete(realm.objects("FieldModel"));
+      var data = response.data;
+      for (var i in data) {
+        let row_data = data[i];
 
-          getState().user.user.goal.push({
-            id: String(response.data[0].id),
-            category_id: String(categoryId),
-            require_nutrition_plan: requireNutritionPlan ? true : false,
-            fields: fields
+        var user_goal_details = row_data.user_goal_details;
+
+        var field_array = [];
+        if (user_goal_details != null) {
+          for (var k in user_goal_details) {
+            let field_row = user_goal_details[k];
+            let field_to_insert = {
+              id: String(field_row.sub_category),
+              value: String(field_row.value),
+              item_type: String(field_row.title),
+              title: String(field_row.title)
+            };
+            field_array.push(field_to_insert);
+          }
+        }
+
+        try {
+          // add to realm
+          realm.write(() => {
+            // deleting all the fields before inserting new ones
+            realm.delete(realm.objects("FieldModel"));
+
+            getState().user.user.goal.push({
+              id: String(row_data.id),
+              category_id: String(categoryId),
+              require_nutrition_plan: requireNutritionPlan ? true : false,
+              fields: field_array
+            });
+            dispatch({ type: "user_set_goal_model_off" }); // inorder to remove the model once savingon realm succes
           });
-          dispatch({ type: "user_set_goal_model_off" }); // inorder to remove the model once savingon realm succes
-        });
-      } catch (error) {
-        console.log("Cannot Create FieldModel !!!!!!!!", error);
+        } catch (error) {
+          console.log("Cannot Create FieldModel !!!!!!!!", error);
+        }
       }
+
       var user_injury_data = realm.objects("UserModel");
       console.log(
         "USER_INJURY_DATA afterSetGoal >> > >  > ",

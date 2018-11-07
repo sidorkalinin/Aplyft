@@ -303,6 +303,7 @@ export const optoutpress = () => {
             "PerformanceSearchListModel"
           );
           let allPerformanceModel = realm.objects("PerformanceModel");
+          let allPerformanceDataModel = realm.objects("PerformanceDataModel");
           let allWarmUpSetModel = realm.objects("WarmUpSetModel");
           let allWarmUpModel = realm.objects("WarmUpModel");
           let allWarmUpExerciseModel = realm.objects("WarmUpExerciseModel");
@@ -313,7 +314,9 @@ export const optoutpress = () => {
           realm.delete(allSets);
           realm.delete(allNutrition);
 
+          realm.delete(allPerformanceSearchListModel);
           realm.delete(allPerformanceModel);
+          realm.delete(allPerformanceDataModel);
           realm.delete(allWarmUpSetModel);
           realm.delete(allWarmUpModel);
           realm.delete(allWarmUpExerciseModel);

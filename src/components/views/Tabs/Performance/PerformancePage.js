@@ -8,13 +8,16 @@ import {
   Modal,
   ActivityIndicator,
   KeyboardAvoidingView,
+  DatePickerIOS,
   TouchableOpacity,
+  Platform,
   FlatList
 } from "react-native";
 import { connect } from "react-redux";
 import { Button } from "../../../../components/common";
 import styles from "./styles";
 import moment from "moment";
+import AndroidDatePicker from "../../../../components/common/AndroidDatePicker";
 import {
   change_option_Pressed,
   inputChange,
@@ -22,9 +25,11 @@ import {
   onResetPress,
   updateIsResetting,
   submitVal,
-  addNewInput
+  addNewInput,
+  resetRecord,
+  onSetPerformanceDate
 } from "./actions";
-
+import convert from "convert-units";
 import {
   performance_Realm,
   performance_Server_Relam
@@ -77,8 +82,11 @@ class PerformancePage extends Component {
 
     this.state = {
       refreshing: false,
+      isAdding: this.props.isAdding,
       addnewInput: false,
-      refreshedPage: false
+      refreshedPage: false,
+      FlatListData: this.props.flatListData,
+      refreshingFlatListData: this.props.refreshingFlatListData
     };
   }
 
@@ -87,16 +95,16 @@ class PerformancePage extends Component {
       name: "Weight",
       value: "weight"
     };
-    let selectOption = true ? { type: option } : { duration: option };
 
-    this.props.getValues(selectOption);
-
+    let selectOption = true ? { type: option } : { duration: option }; // inorder to keep the same structure  like how its called in the component/SelectOptionPage, i passed true only to get the type obj
     let duration_id = this.props.duration.value;
     let itemType = this.props.type.value;
-    console.log("duration OBJ is : ", duration_id);
-    console.log("itemType OBJ is : ", itemType);
-    this.props.performance_Realm();
-    this.props.performance_Server_Relam({ itemType, duration_id });
+
+    this.props.performance_Server_Relam({
+      itemType,
+      duration_id,
+      selectOption
+    });
   }
 
   componentDidMount() {
@@ -126,8 +134,12 @@ class PerformancePage extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     console.log("I am in the Component Did Update ");
-    if (prevProps.isAdding !== this.props.isAdding) {
-      console.log("Yess The Prev and now are different ");
+    if (
+      prevProps.isAdding !== this.props.isAdding ||
+      prevProps.refreshingFlatListData !== this.props.refreshingFlatListData
+    ) {
+      // console.log("Yess The Prev and now are different ");
+      // console.log("The prevProps and prevState are : ", prevProps, prevState);
       this.forceUpdate();
     }
   }
@@ -428,7 +440,30 @@ class PerformancePage extends Component {
 
   onSubmitVal(inputVal, type) {
     let duration_id = this.props.duration.value;
-    this.props.submitVal({ inputVal, type, duration_id });
+    let itemType = this.props.type.value;
+    let perfomance_date = this.props.date;
+    if (itemType.toLowerCase() == "body fat") {
+      var option = {
+        name: itemType.toCamelCase(),
+        value: itemType.toLowerCase()
+      };
+    } else {
+      var option = {
+        name: itemType.toCamelCase(),
+        value: itemType.toLowerCase()
+      };
+    }
+
+    let selectOption = true ? { type: option } : { duration: option }; // inorder to keep the same structure  like how its called in the component/SelectOptionPage, i passed true only to get the type obj
+    // console.log("The inputVal in the submitVal func is : ", inputVal);
+    this.props.submitVal({
+      inputVal,
+      type,
+      itemType,
+      duration_id,
+      selectOption,
+      perfomance_date
+    });
     this.props.addNewInput(false);
   }
 
@@ -484,7 +519,7 @@ class PerformancePage extends Component {
   }
 
   _renderDots = ({ x, y, index }) => {
-    console.log("this.props.datavalue is: >>>>>> : ", this.props.datavalue);
+    // console.log("this.props.datavalue is: >>>>>> : ", this.props.datavalue);
     if (index == 0 || index == this.props.datavalue.length - 1) {
       return <G />;
     }
@@ -498,32 +533,152 @@ class PerformancePage extends Component {
       </G>
     );
   };
+
+  onDeleteRecord(item_value, item_id, item_type, item_value_type) {
+    let duration_id = this.props.duration.value;
+    let itemType = this.props.type.value;
+    if (itemType.toLowerCase() == "body fat") {
+      var option = {
+        name: item_type.toCamelCase(),
+        value: item_type.toLowerCase()
+      };
+    } else {
+      var option = {
+        name: item_type.toCamelCase(),
+        value: item_value_type.toLowerCase()
+      };
+    }
+
+    let selectOption = true ? { type: option } : { duration: option };
+    this.props.resetRecord({
+      item_value,
+      item_id,
+      duration_id,
+      itemType,
+      selectOption
+    });
+  }
   _keyExtractor = (item, index) => item.id;
 
   _renderItem = ({ item }) => {
-    return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: "column",
-          marginTop: 10,
-          marginBottom: 10,
-          marginLeft: 10,
-          backgroundColor: "white"
-        }}
-      >
-        <View>
-          <Text style={{ fontSize: 16, fontWeight: "700" }}>
-            {Math.round(item.value * 100) / 100} kg
-          </Text>
+    if (this.props.isMetric) {
+      var item_value = item.value;
+      if (item.value_type == "weight") {
+        var unitSymbol = "Kg";
+      } else if (item.value_type == "percentage") {
+        var unitSymbol = "%";
+      } else if (item.value_type == "time") {
+        var unitSymbol = "s";
+      } else if (item.value_type == "distance") {
+        var unitSymbol = "cm";
+      }
+    } else {
+      if (item.value_type == "weight") {
+        var item_value = convert(item.value)
+          .from("kg")
+          .to("lb");
+        var unitSymbol = "lb";
+      } else if (item.value_type == "percentage") {
+        var item_value = item.value;
+        var unitSymbol = "%";
+      } else if (item.value_type == "time") {
+        var item_value = item.value;
+        var unitSymbol = "s";
+      } else if (item.value_type == "distance") {
+        var item_value = convert(item.value)
+          .from("cm")
+          .to("in");
+        var unitSymbol = "inches";
+      }
+    }
+    if (
+      item.type == "weight" ||
+      item.type == "Weight" ||
+      item.type == "body fat" ||
+      item.type == "Body Fat" ||
+      item.type == "bodyfat"
+    ) {
+      return (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            // marginTop: 10,
+            // marginBottom: 10,
+            // marginLeft: 10,
+            backgroundColor: "white"
+          }}
+        >
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "column",
+              marginTop: 10,
+              marginBottom: 10,
+              marginLeft: 10,
+              backgroundColor: "white"
+            }}
+          >
+            <View>
+              <Text style={{ fontSize: 16, fontWeight: "700" }}>
+                {Math.round(item_value * 100) / 100}
+                {unitSymbol}
+              </Text>
+            </View>
+            <View>
+              <Text style={{ fontSize: 15, fontWeight: "500" }}>
+                {moment(item.date).format("dddd DD, MMMM YYYY ")}
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            onPress={this.onDeleteRecord.bind(
+              this,
+              item_value,
+              item.id,
+              item.type,
+              item.value_type
+            )}
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              paddingRight: 20,
+              paddingLeft: 20
+            }}
+          >
+            <Image
+              style={{ width: 22, height: 22 }}
+              source={require("assets/images/trash-icon.png")}
+            />
+          </TouchableOpacity>
         </View>
-        <View>
-          <Text style={{ fontSize: 15, fontWeight: "500" }}>
-            {moment(item.date).format("dddd DD, MMMM YYYY ")}
-          </Text>
+      );
+    } else {
+      return (
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "column",
+            marginTop: 10,
+            marginBottom: 10,
+            marginLeft: 10,
+            backgroundColor: "white"
+          }}
+        >
+          <View>
+            <Text style={{ fontSize: 16, fontWeight: "700" }}>
+              {Math.round(item_value * 100) / 100}
+              {unitSymbol}
+            </Text>
+          </View>
+          <View>
+            <Text style={{ fontSize: 15, fontWeight: "500" }}>
+              {moment(item.date).format("dddd DD, MMMM YYYY ")}
+            </Text>
+          </View>
         </View>
-      </View>
-    );
+      );
+    }
   };
   _renderSeparator = () => {
     return <View style={styles.seperatorStyle} />;
@@ -545,6 +700,36 @@ class PerformancePage extends Component {
       </View>
     );
   };
+  _renderHeader = () => {
+    return (
+      <View
+        style={{
+          width: "100%",
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "flex-start",
+          backgroundColor: "#EEEEEE",
+          height: 50
+        }}
+      >
+        <View
+          style={{
+            marginLeft: 10,
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "flex-start"
+          }}
+        >
+          <Text style={{ fontSize: 16, fontWeight: "700" }}>Entries</Text>
+        </View>
+      </View>
+    );
+  };
+
+  setDate(newDate) {
+    // this.setState({ chosenDate: newDate });
+    this.props.onSetPerformanceDate({ newDate });
+  }
 
   render() {
     const axesSvg = {
@@ -556,7 +741,6 @@ class PerformancePage extends Component {
     };
     const indexToClipFrom = 10;
     const Clips = ({ x, width }) => {
-      console.log("===========", x(1), x(2), x(3), x(4));
       return (
         <Defs key={"clips"}>
           <ClipPath id="clip-path-1">
@@ -608,9 +792,11 @@ class PerformancePage extends Component {
     );
 
     var inputVal = this.props.inputvalue;
+    // console.log("this.props.inputVal", this.props.inputvalue);
+    console.log("this.props.date", this.props.date);
     var performanceType = this.props.type.value;
     var addnewInput = this.props.addnewInput;
-
+    var date = this.props.date;
     return (
       <KeyboardAvoidingView style={styles.inputContainer} behavior="padding">
         <ScrollView style={styles.mainContainer}>
@@ -677,7 +863,7 @@ class PerformancePage extends Component {
             <View />
           )}
 
-          {this.props.isAdding ? (
+          {/* {this.props.isAdding ? (
             <Modal transparent animationType="fade">
               <View
                 style={{
@@ -695,7 +881,7 @@ class PerformancePage extends Component {
             </Modal>
           ) : (
             <View />
-          )}
+          )} */}
           <Modal
             visible={addnewInput}
             transparent
@@ -722,41 +908,120 @@ class PerformancePage extends Component {
                   alignItems: "center",
                   backgroundColor: "white",
                   borderRadius: 20,
-                  height: "40%"
+                  height: "85%"
                 }}
               >
                 <View
                   style={{
-                    alignSelf: "flex-start",
-                    marginLeft: 35,
-                    marginBottom: 10
+                    flex: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    width: "100%"
                   }}
                 >
-                  <Text style={{ fontWeight: "900", color: "#181f31" }}>
-                    Input a New Value
-                  </Text>
+                  <View
+                    style={{
+                      alignSelf: "center",
+                      // marginLeft: 35,
+                      marginBottom: 10
+                    }}
+                  >
+                    <Text style={{ fontWeight: "900", color: "#181f31" }}>
+                      Input a New Value
+                    </Text>
+                  </View>
+
+                  <View style={styles.searchContainer}>
+                    <TextInput
+                      autoCapitalize="none"
+                      style={styles.inputStyle}
+                      underlineColorAndroid="transparent"
+                      keyboardType="numeric"
+                      autoCorrect={false}
+                      placeholder="Your New Value is..."
+                      placeholderTextColor="#cccccc"
+                      value={this.props.inputvalue}
+                      onChangeText={this._onInputChange.bind(this)}
+                    />
+                  </View>
                 </View>
 
-                <View style={styles.searchContainer}>
-                  <TextInput
-                    autoCapitalize="none"
-                    style={styles.inputStyle}
-                    underlineColorAndroid="transparent"
-                    keyboardType="numeric"
-                    autoCorrect={false}
-                    placeholder="Your New Value is..."
-                    placeholderTextColor="#cccccc"
-                    value={this.props.inputvalue}
-                    onChangeText={this._onInputChange.bind(this)}
-                  />
-                </View>
+                {Platform.OS === "ios" ? ( //determining whether ios or android to use different UI
+                  <View
+                    style={{
+                      flex: 2,
+                      width: "94%",
+                      marginTop: 15,
+                      marginLeft: 15,
+                      marginRight: 15,
+                      height: "auto",
+                      backgroundColor: "#F0EFEF",
+                      borderRadius: 5
+                    }}
+                  >
+                    <Text
+                      style={{
+                        marginTop: 20,
+                        marginLeft: 12,
+                        color: "#AEAEAE"
+                      }}
+                    >
+                      Date
+                    </Text>
+
+                    <DatePickerIOS
+                      date={date}
+                      mode={"date"}
+                      onDateChange={this.setDate.bind(this)}
+                      maximumDate={
+                        new Date(
+                          moment()
+                            .add(1, "d")
+                            .format("YYYY-MM-DD")
+                        )
+                      }
+                    />
+                  </View>
+                ) : (
+                  <View
+                    style={{
+                      flex: 1,
+                      width: "94%",
+                      marginTop: 15,
+                      marginLeft: 15,
+                      marginRight: 15,
+                      // height: "10%",
+                      backgroundColor: "#FFF",
+                      borderRadius: 5
+                    }}
+                  >
+                    <View style={{ backgroundColor: "#F0EFEF" }}>
+                      <Text
+                        style={{
+                          marginTop: 20,
+                          marginLeft: 12,
+                          color: "#AEAEAE"
+                        }}
+                      >
+                        Date
+                      </Text>
+                    </View>
+
+                    <View style={{ justifyContent: "center" }}>
+                      <AndroidDatePicker
+                        value={moment(date).format("DD MMMM YYYY")}
+                        onDateChange={this.setDate.bind(this)}
+                      />
+                    </View>
+                  </View>
+                )}
 
                 <View
                   style={{
                     alingItems: "center",
                     justifyContent: "center",
                     height: 45,
-                    marginTop: 10,
+                    marginTop: 20,
                     width: "82%"
                   }}
                 >
@@ -776,7 +1041,8 @@ class PerformancePage extends Component {
                     alingItems: "center",
                     justifyContent: "center",
 
-                    marginTop: 15
+                    marginTop: 20,
+                    marginBottom: 20
                   }}
                 >
                   <Text
@@ -876,8 +1142,11 @@ class PerformancePage extends Component {
                     formatLabel={(value, index) => {
                       if (
                         index == 0 ||
+                        index < 0 ||
                         index == this.props.datavalue.length - 1
                       ) {
+                        return "";
+                      } else if (this.props.data.length < 1) {
                         return "";
                       } else {
                         return moment(this.props.data[index].date).format(
@@ -901,6 +1170,7 @@ class PerformancePage extends Component {
           {this._renderAddValue()}
           <View style={{ flex: 1, backgroundColor: "white" }}>
             <FlatList
+              extraData={this.state}
               data={this.props.flatListData}
               keyExtractor={this._keyExtractor}
               renderItem={this._renderItem}
@@ -915,15 +1185,7 @@ class PerformancePage extends Component {
   }
 }
 
-const mapStateToProps = ({ performancered, graphpagered, user }) => {
-  console.log(
-    'datavalue in the GraphPage is :  ;  : : : "  : : ',
-    graphpagered.datavalue
-  );
-  console.log(
-    'duration in the GraphPage is :  ;  : : : "  : : ',
-    graphpagered.duration
-  );
+const mapStateToProps = ({ graphpagered, user }) => {
   const {
     inputvalue,
     datavalue,
@@ -933,8 +1195,9 @@ const mapStateToProps = ({ performancered, graphpagered, user }) => {
     isResetting,
     isAdding,
     addnewInput,
-    addNewInput,
-    flatListData
+    flatListData,
+    date,
+    refreshingFlatListData
   } = graphpagered;
   return {
     type: type,
@@ -944,8 +1207,10 @@ const mapStateToProps = ({ performancered, graphpagered, user }) => {
     datavalue: datavalue,
     addnewInput: addnewInput,
     data: data,
+    date: date,
     isResetting: isResetting,
     isAdding: isAdding,
+    refreshingFlatListData: refreshingFlatListData,
     isMetric: user.user.units == "metric" ? true : false
   };
 };
@@ -961,6 +1226,8 @@ export default connect(
     submitVal,
     addNewInput,
     performance_Realm,
-    performance_Server_Relam
+    performance_Server_Relam,
+    resetRecord,
+    onSetPerformanceDate
   }
 )(PerformancePage);

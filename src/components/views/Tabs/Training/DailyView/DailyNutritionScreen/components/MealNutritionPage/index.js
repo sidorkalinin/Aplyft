@@ -7,10 +7,12 @@ import {
   FlatList,
   SectionList,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Image,
   TextInput,
   Modal,
   ScrollView,
+  KeyboardAvoidingView,
   ActivityIndicator
 } from "react-native";
 import { connect } from "react-redux";
@@ -57,6 +59,8 @@ class MealNutritionPage extends PureComponent {
   constructor(props) {
     super(props);
 
+    this.focusNextField = this.focusNextField.bind(this);
+    this.inputs = {};
     this.state = {
       refreshing: false
     };
@@ -69,7 +73,9 @@ class MealNutritionPage extends PureComponent {
     var meal_id = this.props.navigation.state.params.id;
     this.props.loadMealInfo(meal_id);
   }
-
+  focusNextField(id) {
+    this.inputs[id].focus();
+  }
   autofillPressed() {
     var checked = this.props.checked;
     var meal_autofill_id = this.props.navigation.state.params.id;
@@ -362,8 +368,8 @@ class MealNutritionPage extends PureComponent {
 
     const { mainContainer, emptyComponentContainer } = Styles;
     return (
-      <ScrollView style={mainContainer}>
-        <View
+      <ScrollView style={mainContainer} keyboardShouldPersistTaps="handled">
+        <KeyboardAvoidingView
           style={{
             flex: 1,
             marginTop: 10,
@@ -408,6 +414,13 @@ class MealNutritionPage extends PureComponent {
                     onChangeText={this.onProteinChange.bind(this)}
                     autoCorrect={false}
                     underlineColorAndroid="rgba(0,0,0,0)"
+                    inputRef={input => {
+                      this.inputs["protein"] = input;
+                    }}
+                    returnKeyType={"next"}
+                    onSubmitEditing={() => {
+                      this.focusNextField("carbs");
+                    }}
                   />
                 </View>
                 <Text style={Styles.ItemTitleColumnAchivedText}>Actual</Text>
@@ -433,6 +446,13 @@ class MealNutritionPage extends PureComponent {
                     autoCorrect={false}
                     keyboardType="numeric"
                     underlineColorAndroid="rgba(0,0,0,0)"
+                    inputRef={input => {
+                      this.inputs["carbs"] = input;
+                    }}
+                    returnKeyType={"next"}
+                    onSubmitEditing={() => {
+                      this.focusNextField("fats");
+                    }}
                   />
                 </View>
                 <Text style={Styles.ItemTitleColumnAchivedText}>Actual</Text>
@@ -458,6 +478,13 @@ class MealNutritionPage extends PureComponent {
                     autoCorrect={false}
                     keyboardType="numeric"
                     underlineColorAndroid="rgba(0,0,0,0)"
+                    inputRef={input => {
+                      this.inputs["fats"] = input;
+                    }}
+                    returnKeyType={"next"}
+                    onSubmitEditing={() => {
+                      this.focusNextField("fiber");
+                    }}
                   />
                 </View>
                 <Text style={Styles.ItemTitleColumnAchivedText}>Actual</Text>
@@ -483,6 +510,13 @@ class MealNutritionPage extends PureComponent {
                     autoCorrect={false}
                     keyboardType="numeric"
                     underlineColorAndroid="rgba(0,0,0,0)"
+                    inputRef={input => {
+                      this.inputs["fiber"] = input;
+                    }}
+                    returnKeyType={"next"}
+                    onSubmitEditing={() => {
+                      this.focusNextField("sugar");
+                    }}
                   />
                 </View>
                 <Text style={Styles.ItemTitleColumnAchivedText}>Actual</Text>
@@ -508,6 +542,13 @@ class MealNutritionPage extends PureComponent {
                     autoCorrect={false}
                     keyboardType="numeric"
                     underlineColorAndroid="rgba(0,0,0,0)"
+                    inputRef={input => {
+                      this.inputs["sugar"] = input;
+                    }}
+                    returnKeyType={"next"}
+                    onSubmitEditing={() => {
+                      this.focusNextField("cholesterol");
+                    }}
                   />
                 </View>
                 <Text style={Styles.ItemTitleColumnAchivedText}>Actual</Text>
@@ -533,6 +574,13 @@ class MealNutritionPage extends PureComponent {
                     autoCorrect={false}
                     keyboardType="numeric"
                     underlineColorAndroid="rgba(0,0,0,0)"
+                    inputRef={input => {
+                      this.inputs["cholesterol"] = input;
+                    }}
+                    returnKeyType={"next"}
+                    onSubmitEditing={() => {
+                      this.focusNextField("sodium");
+                    }}
                   />
                 </View>
                 <Text style={Styles.ItemTitleColumnAchivedText}>Actual</Text>
@@ -558,6 +606,13 @@ class MealNutritionPage extends PureComponent {
                     autoCorrect={false}
                     keyboardType="numeric"
                     underlineColorAndroid="rgba(0,0,0,0)"
+                    inputRef={input => {
+                      this.inputs["sodium"] = input;
+                    }}
+                    returnKeyType={"next"}
+                    onSubmitEditing={() => {
+                      this.focusNextField("water");
+                    }}
                   />
                 </View>
                 <Text style={Styles.ItemTitleColumnAchivedText}>Actual</Text>
@@ -583,6 +638,11 @@ class MealNutritionPage extends PureComponent {
                     autoCorrect={false}
                     keyboardType="numeric"
                     underlineColorAndroid="rgba(0,0,0,0)"
+                    inputRef={input => {
+                      this.inputs["water"] = input;
+                    }}
+                    returnKeyType="done"
+                    onSubmitEditing={this.onSaveMeal.bind(this, totalCalories)}
                   />
                 </View>
                 <Text style={Styles.ItemTitleColumnAchivedText}>Actual</Text>
@@ -670,7 +730,7 @@ class MealNutritionPage extends PureComponent {
           >
             <Text>cancel</Text>
           </TouchableOpacity>
-        </View>
+        </KeyboardAvoidingView>
       </ScrollView>
     );
   }

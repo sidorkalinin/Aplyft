@@ -1,6 +1,7 @@
 import {
   GET_PERFORMANCE_LIST,
-  GET_PERFORMANCE_SEARCH_LIST
+  GET_PERFORMANCE_SEARCH_LIST,
+  GET_PERFORMANCE_DETAIL_LIST
 } from "../../../../../variables";
 import axios from "axios";
 import Realm from "../../../../../models";
@@ -96,6 +97,7 @@ var ParseSingleObjectFromArray = (obj, ar) => {
 };
 
 export const performance_Server_Relam = payload => {
+  // inorder to get all the data from the server as an average to display them in the graph
   return (dispatch, getState) => {
     let itemType = payload.itemType;
     let duration_id = payload.duration_id;
@@ -153,14 +155,101 @@ export const performance_Server_Relam = payload => {
       })
       .then(() => {
         dispatch({
-          // inorder to reload the data from Realm that contains the newly added ones
-          type: "performance_Realm",
-          payload: payload
+          type: "add_performance_value_finish"
         });
+        dispatch(performanceData_server_realm(payload));
+      });
+  };
+};
+export const performanceData_server_realm = payload => {
+  //in order to get all the data of the performance and not the average , to display them in the flatList
+  return (dispatch, getState) => {
+    let itemType = payload.itemType;
+    let duration_id = payload.duration_id;
+    let selectOption = payload.selectOption;
+    axios
+      .get(
+        GET_PERFORMANCE_DETAIL_LIST(
+          getState().user.user.id,
+          itemType,
+          duration_id
+        )
+      )
+      .then(function(response) {
+        let response_data = response.data;
+        let data = response_data;
+
+        try {
+          Realm.write(() => {
+            let alldataperformance = Realm.objects("PerformanceDataModel");
+            Realm.delete(alldataperformance);
+          });
+        } catch (error) {
+          console.log(
+            "Cannot Delete Records From PerformanceDataModel !!!!!!!!",
+            error
+          );
+        }
+
+        //looping first through the performanceList data
+        for (var data_index in data) {
+          var performanceListData_to_insert = {}; // will fillit it along the way
+
+          var row = data[data_index];
+
+          performanceListData_to_insert.id = String(row.id);
+          performanceListData_to_insert.type = row.type.toLowerCase();
+          performanceListData_to_insert.value = row.value.toString();
+          performanceListData_to_insert.value_type = row.value_type.toLowerCase();
+          performanceListData_to_insert.date = row.date;
+
+          try {
+            Realm.write(() => {
+              //update first and then link
+              Realm.create(
+                "PerformanceDataModel",
+                performanceListData_to_insert,
+                true // check if it its laready inserted otherwise update
+              );
+            });
+          } catch (error) {
+            console.log(
+              "Cannot Create a New PerformanceDataModel !!!!!!!!",
+              error
+            );
+          }
+        }
+      })
+      .catch(() => {
+        dispatch({
+          type: "add_performance_value_finish"
+        });
+      })
+      .then(() => {
+        // dispatch({
+        //   // inorder to reload the data from Realm that contains the newly added ones
+        //   type: "performance_Realm",
+        //   payload: payload
+        // });
+        // dispatch({
+        //   // inorder to reload the data from Realm that contains the newly added ones
+        //   type: "performanceData_Realm",
+        //   payload: payload
+        // });
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         dispatch({
           // inorder to reload the data from realm that contains the newly added ones
           type: "get_Values",
           payload: selectOption
+        });
+      })
+      .then(() => {
+        dispatch({
+          type: "add_performance_value_finish"
+        });
+        dispatch({
+          // inorder to reload the data and force a refresh for the page
+          type: "refreshData"
         });
       });
   };

@@ -5,7 +5,7 @@ export const { width: viewportWidth, height: viewportHeight } = Dimensions.get(
   "window"
 );
 
-export const APP_VERSION = "2.0.0";
+export const APP_VERSION = "2.3.2";
 
 export const APP_IOS_ID = "1236424793";
 export const IOS_SYMLINK =
@@ -13,6 +13,7 @@ export const IOS_SYMLINK =
 export const GOOGLE_PLAY_SYMLINK = "market://details?id=com.brightlab.aplyft";
 
 // endpoint API
+
 export const PROTOCOL = "https://";
 export const URI = PROTOCOL + "appx.aplyft.com"; //"appx.aplyft.com";
 export const API = URI + "/api";
@@ -223,6 +224,25 @@ export const GET_PERFORMANCE_LIST = (USERID, TYPE, DURATION) => {
     DURATION
   );
 };
+export const GET_PERFORMANCE_DETAIL_LIST = (USERID, TYPE, DURATION) => {
+  return (
+    API +
+    "/users/" +
+    USERID +
+    "/user_performance_trackings/?user=" +
+    USERID +
+    "&type=" +
+    TYPE +
+    "&duration=" +
+    DURATION
+  );
+};
+export const DELETE_PERFORMANCE_RECORD = (USERID, RECORD_ID) => {
+  return (
+    API + "/users/" + USERID + "/user_performance_trackings/" + RECORD_ID + "/"
+  );
+};
+
 export const GET_PERFORMANCE_SEARCH_LIST = USERID => {
   return (
     API + "/users/" + USERID + "/user_performance_trackings/get_performance/"

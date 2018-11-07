@@ -28,6 +28,15 @@ export const loadDailyNutrition = (payload, url = GET_NUTRITION) => {
     axios
       .get(url(getState().user.user.id))
       .then(result => {
+        let nutrition_to_delete = realm.objects("NutritionModel");
+        try {
+          realm.write(() => {
+            realm.delete(nutrition_to_delete);
+          });
+        } catch (e) {
+          console.log("Error on deleting old data in nutrition model", e);
+        }
+
         let data = result.data.results;
         var next_url = result.data.next;
 
@@ -126,6 +135,7 @@ export const loadDailyNutrition = (payload, url = GET_NUTRITION) => {
             console.log("Error in Saving the Nutrition Data in Realm: ", e);
           }
         }
+
         if (next_url != null) {
           url = next_url;
 

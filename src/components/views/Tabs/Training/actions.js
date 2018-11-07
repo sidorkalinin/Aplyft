@@ -120,6 +120,10 @@ export const loadWorkoutFromServer = (getDetails = false) => {
     });
 
     var Daily_Date = moment().format("YYYY-MM-DD");
+    // console.log(
+    //   "NEW DATE in GET_WORKOUTS is : ",
+    //   new Date(moment.utc().format("YYYY-MM-DD HH:mm:ss"))
+    // );
 
     axios
       .get(GET_WORKOUTS(getState().user.user.id, Daily_Date))
@@ -139,10 +143,10 @@ export const loadWorkoutFromServer = (getDetails = false) => {
           realm_workoutID_Array.push(r_w_id);
         }
 
-        console.log(
-          "------realm_workoutID_Array is realm: ",
-          realm_workoutID_Array
-        );
+        // console.log(
+        //   "------realm_workoutID_Array is realm: ",
+        //   realm_workoutID_Array
+        // );
         //looping first through th workout
         for (var data_index in data) {
           var workout_to_insert = {}; // will fillit it along the way
@@ -150,6 +154,23 @@ export const loadWorkoutFromServer = (getDetails = false) => {
           var row = data[data_index];
 
           var d = row.pushed_date.split(" "); // splitting the date string got from the server
+
+          var date_test = new Date(d[0]);
+          var userTimezoneOffset = date_test.getTimezoneOffset() * 60000;
+
+          console.log("d in GET_WORKOUTS is : ", d);
+          console.log(
+            "userTimezoneOffset in GET_WORKOUTS is : ",
+            userTimezoneOffset
+          );
+          console.log(
+            "moment in GET_WORKOUTS is : ",
+            moment("2018-11-06T00:00:00.000Z")
+          );
+          console.log(
+            "moment.ytc in GET_WORKOUTS is : ",
+            moment.utc("2018-11-06T00:00:00.000Z")
+          );
 
           if (row.description == null) {
             var workout_title = "";
@@ -163,21 +184,24 @@ export const loadWorkoutFromServer = (getDetails = false) => {
           workout_to_insert.id = String(row.id);
           workout_to_insert.title = workout_title;
           workout_to_insert.removed = String(row.removed);
-          workout_to_insert.date = new Date(d[0]);
+          workout_to_insert.date = row.pushed_date;
+          //new Date(
+          //date_test.getTime() - userTimezoneOffset
+          //);
           workout_to_insert.category = "workout"; //in-order to identify that its type is workout
           workout_to_insert.loged =
             row.user_feedback_date != null ? true : false;
           workouts_dummy_array.push(workout_to_insert);
         }
-
-        console.log(
-          "------server_workoutID_Array is server: ",
-          server_workoutID_Array
-        );
-        console.log(
-          "------workouts_dummy_array is $$$$: ",
-          workouts_dummy_array
-        );
+        //
+        // console.log(
+        //   "------server_workoutID_Array is server: ",
+        //   server_workoutID_Array
+        // );
+        // console.log(
+        //   "------workouts_dummy_array is $$$$: ",
+        //   workouts_dummy_array
+        // );
 
         //getting the difference between realm_workoutID_Array and server_workoutID_Array
 
@@ -193,11 +217,11 @@ export const loadWorkoutFromServer = (getDetails = false) => {
       })
       .then(obj => {
         console.log("I am Removin from REALM !!!!!!!!!!!!!");
-        console.log("obj.difference is:  ", obj.difference);
-        console.log(
-          "------obj.workouts_dummy_array is: ",
-          obj.workouts_dummy_array
-        );
+        // console.log("obj.difference is:  ", obj.difference);
+        // console.log(
+        //   "------obj.workouts_dummy_array is: ",
+        //   obj.workouts_dummy_array
+        // );
 
         if (obj.difference.length > 0) {
           for (var j in obj.difference) {

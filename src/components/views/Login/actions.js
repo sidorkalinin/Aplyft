@@ -285,6 +285,7 @@ var parseReturnFromServer = (response, getState) => {
   let data = response.data;
   let user = data.user;
   let goal = data.user_goal;
+  let user_goal_details = data.user_goal_details;
   let user_goal_pt = data.user_goal_personal_trainer;
   let personal_trainer_review = data.personal_trainer_review;
 
@@ -313,8 +314,8 @@ var parseReturnFromServer = (response, getState) => {
       gender: String(user.gender) || "",
       height: String(user.height) || "",
       weight: String(user.weight) || "",
-      fatsecretAuthToken: String(user.fatsecret_auth_token) || "",
-      fatsecretAuthSecret: String(user.fatsecret_auth_secret) || "",
+      fatsecretAuthToken: user.fat_secret_token || "",
+      fatsecretAuthSecret: user.fat_secret_verifier || "",
       preferedWorkoutDays: String(user.day_of_workout) || null,
       activityLevel: String(user.activity_level) || null,
       dateOfBirth: new Date(user.dob) || null,
@@ -345,6 +346,19 @@ var parseReturnFromServer = (response, getState) => {
     // check if the goal model is there in order to be assigned to the user
     const user_model = realm.create("UserModel", userObjectToInsert, true); // update if not available
 
+    var field_array = [];
+    if (user_goal_details != null) {
+      for (var k in user_goal_details) {
+        let field_row = user_goal_details[k];
+        let field_to_insert = {
+          id: String(field_row.user_goal_sub_category_id),
+          value: String(field_row.value),
+          item_type: String(field_row.category),
+          title: String(field_row.category)
+        };
+        field_array.push(field_to_insert);
+      }
+    }
     // we need to check if the user has goal first before adding it to realm
     if (goal !== null) {
       const goal_model = realm.create(
@@ -355,7 +369,8 @@ var parseReturnFromServer = (response, getState) => {
           require_nutrition_plan:
             goal.require_nutrition_plan == "1" ? true : false,
           freedailyWorkout: goal.is_free_daily == "1" ? true : false,
-          isOnPaidPlan: goal.is_paid == "1" ? true : false
+          isOnPaidPlan: goal.is_paid == "1" ? true : false,
+          fields: field_array
         },
         true
       );

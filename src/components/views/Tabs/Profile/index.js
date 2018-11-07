@@ -218,9 +218,17 @@ class profileScreen extends Component {
               backgroundColor: "#181f31"
             }}
           />
-          <Text style={{ color: "grey", fontSize: 16 }}>{res.title}</Text>
+          <Text
+            style={{
+              color: "grey",
+              fontSize: 16,
+              marginRight: 10,
+              marginLeft: 10
+            }}
+          >
+            {res.title}
+          </Text>
           <Text style={{ color: "grey", fontSize: 16 }}>
-            {" "}
             {res.value == 0 ? "" : res.value}
           </Text>
         </View>

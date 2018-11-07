@@ -104,18 +104,18 @@ export const Server_loadDailyWorkouts_Realm = payload => {
         var realm_warmup_exerciseID_Array = [];
         var realm_warmup_setID_Array = [];
         fetching_date = Daily_Date + "T00:00:00.000Z";
-        console.log(
-          "fetching_date is ™™™™™™™™™™™™™™™™™™ ™™™™™ £££££ ∞∞∞ : ",
-          fetching_date
-        );
+        // console.log(
+        //   "fetching_date is ™™™™™™™™™™™™™™™™™™ ™™™™™ £££££ ∞∞∞ : ",
+        //   fetching_date
+        // );
         let realm_Workout = realm
           .objects("WorkoutModel")
           .filtered("date == $0", fetching_date);
 
-        console.log(
-          "Todays workout is : ##### #### : ",
-          Array.from(realm_Workout)
-        );
+        // console.log(
+        //   "Todays workout is : ##### #### : ",
+        //   Array.from(realm_Workout)
+        // );
 
         for (var a in realm_Workout) {
           let realm_workout_row = realm_Workout[a];
@@ -157,24 +157,24 @@ export const Server_loadDailyWorkouts_Realm = payload => {
           }
         }
 
-        console.log("------realm_moveID_Array is realm: ", realm_moveID_Array);
-        console.log(
-          "------realm_moves_exerciseID_Array is realm: ",
-          realm_move_exerciseID_Array
-        );
-        console.log("------realm_setID_Array is realm: ", realm_setID_Array);
-        console.log(
-          "------realm_warmupID_Array is realm: ",
-          realm_warmupID_Array
-        );
-        console.log(
-          "------realm_warmup_exerciseID_Array is realm: ",
-          realm_warmup_exerciseID_Array
-        );
-        console.log(
-          "------realm_warmup_setID_Array is realm: ",
-          realm_warmup_setID_Array
-        );
+        // console.log("------realm_moveID_Array is realm: ", realm_moveID_Array);
+        // console.log(
+        //   "------realm_moves_exerciseID_Array is realm: ",
+        //   realm_move_exerciseID_Array
+        // );
+        // console.log("------realm_setID_Array is realm: ", realm_setID_Array);
+        // console.log(
+        //   "------realm_warmupID_Array is realm: ",
+        //   realm_warmupID_Array
+        // );
+        // console.log(
+        //   "------realm_warmup_exerciseID_Array is realm: ",
+        //   realm_warmup_exerciseID_Array
+        // );
+        // console.log(
+        //   "------realm_warmup_setID_Array is realm: ",
+        //   realm_warmup_setID_Array
+        // );
 
         //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         for (var i in data) {
@@ -186,12 +186,22 @@ export const Server_loadDailyWorkouts_Realm = payload => {
           } else {
             var workout_title = row.description;
           }
+
+          var date_test = new Date(d[0]);
+          var userTimezoneOffset = date_test.getTimezoneOffset() * 60000;
           // filling
           workout_to_insert.id = String(row.id);
           workout_to_insert.title = workout_title;
           workout_to_insert.removed = String(row.removed);
           workout_to_insert.category = "workout"; //in-order to identify that its type is workout
-          workout_to_insert.date = new Date(d[0]); //new Date(attributes.date);
+          workout_to_insert.date = row.pushed_date;
+          //new Date(
+          //   date_test.getTime() - userTimezoneOffset
+          // ); //new Date(attributes.date);
+          console.log(
+            "DAily workout_to_insert.date : ",
+            new Date(date_test.getTime() - userTimezoneOffset)
+          );
           workout_to_insert.moves = [];
           workout_to_insert.warmup = [];
           var user_feedback = row.user_feedback;
@@ -489,21 +499,21 @@ export const Server_loadDailyWorkouts_Realm = payload => {
           x => !server_warmup_setID_Array.includes(x)
         );
 
-        console.log(" The Difference_moves is : ", difference_moves);
-        console.log(
-          " The Difference_moves_exercises is : ",
-          difference_moves_exercise
-        );
-        console.log(" The Difference_moves_sets is : ", difference_moves_sets);
-        console.log(" The Difference_warmup is : ", difference_warmup);
-        console.log(
-          " The Difference_warmup_exercises is : ",
-          difference_warmup_exercise
-        );
-        console.log(
-          " The Difference_warmup_sets is : ",
-          difference_warmup_sets
-        );
+        // console.log(" The Difference_moves is : ", difference_moves);
+        // console.log(
+        //   " The Difference_moves_exercises is : ",
+        //   difference_moves_exercise
+        // );
+        // console.log(" The Difference_moves_sets is : ", difference_moves_sets);
+        // console.log(" The Difference_warmup is : ", difference_warmup);
+        // console.log(
+        //   " The Difference_warmup_exercises is : ",
+        //   difference_warmup_exercise
+        // );
+        // console.log(
+        //   " The Difference_warmup_sets is : ",
+        //   difference_warmup_sets
+        // );
 
         //========================================================================
 

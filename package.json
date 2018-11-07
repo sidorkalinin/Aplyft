@@ -12,6 +12,7 @@
     "babel-plugin-transform-remove-console": "^6.9.0",
     "babel-preset-react-native-stage-0": "^1.0.1",
     "crypto-js": "^3.1.9-1",
+    "convert-units": "^2.3.4",
     "moment": "^2.22.1",
     "npm": "^6.2.0",
     "plist": "^2.1.0",

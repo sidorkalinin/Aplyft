@@ -160,17 +160,19 @@ class DailyTrainingScreen extends PureComponent {
       return <View />;
     }
 
-    var date =
-      +section.workout_date.getFullYear() +
-      "-" +
-      ("0" + section.workout_date.getMonth()).slice(-2) +
-      "-" +
-      ("0" + section.workout_date.getDate()).slice(-2);
-
-    // console.log("the workout date is ", new Date(date), "today is", (new Date()) );
-
-    // we need to enable the log button only if the date is equal or before the current workout date
-    if (new Date(date) > new Date()) return <View />;
+    // var date =
+    //   +section.workout_date.getFullYear() +
+    //   "-" +
+    //   ("0" + section.workout_date.getMonth()).slice(-2) +
+    //   "-" +
+    //   ("0" + section.workout_date.getDate()).slice(-2);
+    //
+    // // console.log("the workout date is ", new Date(date), "today is", (new Date()) );
+    //
+    // // we need to enable the log button only if the date is equal or before the current workout date
+    // console.log("New Date(date) is : ", new Date(date));
+    // console.log("New Date() is : ", new Date());
+    // if (new Date(date) > new Date()) return <View />;
 
     if (!section.is_workout_loged) {
       return (
@@ -248,7 +250,7 @@ class DailyTrainingScreen extends PureComponent {
       });
     } else {
       this.props.logDaySubmit({
-        date: new Date(),
+        date: moment().format("YYYY-MM-DD"),
         workoutId: this.state.selected_workout_id,
         text: text,
         nut_text: nut_text

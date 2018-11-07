@@ -7,7 +7,9 @@ const INITIAL_STATE = {
   addnewInput: false,
   datavalue: [],
   flatListData: [],
+  refreshingFlatListData: false,
   data: "",
+  date: new Date(),
   type: {
     name: "Weight",
     value: "weight"
@@ -21,9 +23,6 @@ const INITIAL_STATE = {
 export default (state = INITIAL_STATE, action) => {
   var filter_type = "";
   switch (action.type) {
-    // case "change_option_Pressed":
-    //   console.log('&&&&&&&&&&&&&&&', action.payload)
-    //   return { ...state, isType: action.payload.pop_up };
     case "input_change":
       return { ...state, inputvalue: action.payload };
 
@@ -38,20 +37,11 @@ export default (state = INITIAL_STATE, action) => {
         .filtered("type == $0", type.value)
         .sorted("date");
       var type2value = realm
-        .objects("PerformanceModel")
+        .objects("PerformanceDataModel")
         .filtered("type == $0", type.value)
         .sorted("date");
-      console.log(
-        "type2value type2value type2value : : : ",
-        Array.from(type2value)
-      );
-
       var type2_value = Array.from(type2value);
 
-      type2_value.splice(0, 1);
-      type2_value.splice(type2_value.length - 1, 1);
-
-      console.log("type2_value is : ", type2_value);
       if (typevalue.length == 0) {
         if (type.value == "weight") {
           filter_type = "weight";
@@ -61,10 +51,7 @@ export default (state = INITIAL_STATE, action) => {
       } else {
         filter_type = typevalue[0].value_type;
       }
-      console.log(
-        "Type Value in reducer in is >>>>> >  > > > . . . . >>>>  ",
-        Array.from(typevalue)
-      );
+
       var userUnit = realm.objects("UserModel");
 
       switch (filter_type) {
@@ -270,6 +257,9 @@ export default (state = INITIAL_STATE, action) => {
     case "submit_val":
       return { ...state };
 
+    case "set_performance_date":
+      return { ...state, date: action.payload.newDate };
+
     case "add_performance_value_is_adding":
       return { ...state, isAdding: action.payload };
 
@@ -280,10 +270,22 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, isAdding: true };
 
     case "add_performance_value_finish":
-      return { ...state, isAdding: false, inputvalue: "", addnewInput: false };
+      return {
+        ...state,
+        isAdding: false,
+        inputvalue: "",
+        addnewInput: false,
+        date: new Date()
+      };
 
     case "add_performance_value_failed":
-      return { ...state, isAdding: false, inputvalue: "", addnewInput: false };
+      return {
+        ...state,
+        isAdding: false,
+        inputvalue: "",
+        addnewInput: false,
+        date: new Date()
+      };
 
     case "performance_page_update_is_resetting":
       return { ...state, isResetting: action.payload };
@@ -297,6 +299,12 @@ export default (state = INITIAL_STATE, action) => {
     case "performance_type_pressed":
       return { ...state, addnewInput: action.payload.pop_up };
 
+    case "refreshData":
+      return {
+        ...state,
+        refreshingFlatListData: !state.refreshingFlatListData
+      };
+
     case "user_logout":
       return {
         ...state,
@@ -306,7 +314,9 @@ export default (state = INITIAL_STATE, action) => {
         addnewInput: false,
         datavalue: [],
         flatListData: [],
+        refreshingFlatListData: false,
         data: "",
+        date: new Date(),
         type: {
           name: "Weight",
           value: "weight"
@@ -326,6 +336,8 @@ export default (state = INITIAL_STATE, action) => {
         addnewInput: false,
         datavalue: [],
         flatListData: [],
+        date: new Date(),
+        refreshingFlatListData: false,
         data: "",
         type: {
           name: "Weight",

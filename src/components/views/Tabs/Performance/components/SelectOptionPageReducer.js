@@ -9,18 +9,32 @@ const INIT_STATE = {
 export default (state = INIT_STATE, action) => {
   switch (action.type) {
     case "performance_Realm":
-      let performance_data = Realm.objects("PerformanceModel").sorted("type");
+      //   let performance_data = Realm.objects("PerformanceModel").sorted("type");
+      //
+      //   var tmp_array = [];
+      //   for (var index in performance_data) {
+      //     var row = performance_data[index];
+      //
+      //     //base case
+      //     if (tmp_array.indexOf(row.type) > -1) continue;
+      //     tmp_array.push(row.type);
+      //   }
+      //
+      //   return { ...state, data: tmp_array };
 
-      var tmp_array = [];
-      for (var index in performance_data) {
-        var row = performance_data[index];
-
-        //base case
-        if (tmp_array.indexOf(row.type) > -1) continue;
-        tmp_array.push(row.type);
-      }
-
-      return { ...state, data: tmp_array };
+      // case "performanceData_Realm":
+      //   let performance_data = Realm.objects("PerformanceDataModel").sorted("type");
+      //
+      //   var tmp_array = [];
+      //   for (var index in performance_data) {
+      //     var row = performance_data[index];
+      //
+      //     //base case
+      //     if (tmp_array.indexOf(row.type) > -1) continue;
+      //     tmp_array.push(row.type);
+      //   }
+      //
+      return { ...state };
 
     case "performance_SearchList_Realm":
       let performance_searchList_data = Realm.objects(

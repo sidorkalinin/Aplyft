@@ -54,7 +54,7 @@ class PowerLyfting extends Component {
     });
   };
 
-  _valueEdited = (text, categoryId, index, title) => {
+  _valueEdited = (text, categoryId, index, title, item_type) => {
     // console.log("editing", categoryId, index);
     // index the text inputs by sub category ID
     var tmp = this.state.values.slice();
@@ -64,7 +64,8 @@ class PowerLyfting extends Component {
     tmp[categoryId][index] = {
       id: index,
       value: text,
-      title: title
+      title: title,
+      item_type: item_type
     };
 
     this.setState({
@@ -74,7 +75,7 @@ class PowerLyfting extends Component {
 
   _onEditingEnd = () => {};
 
-  _renderCurrentMax = (item, index) => {
+  _renderCurrentMax = (item, index, item_type) => {
     const {
       detailContainer,
       ItemInputStyle,
@@ -96,7 +97,13 @@ class PowerLyfting extends Component {
             style={ItemInputStyle}
             // onFocus={()=>this._valueEdited("", index, section.id)}
             onChangeText={text => {
-              this._valueEdited(text, item.id, item.data[index].id, "Current");
+              this._valueEdited(
+                text,
+                item.id,
+                item.data[index].id,
+                "Current",
+                item_type
+              );
             }}
             // onEndEditing={this._onEditingEnd.bind(this, index, section) }
             // value={String(item.acheived)}
@@ -108,7 +115,7 @@ class PowerLyfting extends Component {
     );
   };
 
-  _renderTargetMax = (item, index) => {
+  _renderTargetMax = (item, index, item_type) => {
     const {
       detailContainer,
       ItemInputStyle,
@@ -137,7 +144,13 @@ class PowerLyfting extends Component {
             underlineColorAndroid="transparent"
             // onFocus={()=>this._valueEdited("", index, section.id)}
             onChangeText={text => {
-              this._valueEdited(text, item.id, item.data[index].id, "Target");
+              this._valueEdited(
+                text,
+                item.id,
+                item.data[index].id,
+                "Target",
+                item_type
+              );
             }}
             // onEndEditing={ this._onEditingEnd.bind(this, index, section) }
             // value={String(item.acheived)}
@@ -168,8 +181,8 @@ class PowerLyfting extends Component {
           <View style={{ flex: 1 }}>
             <Text style={{ paddingBottom: 10, fontWeight: "bold" }}>Bench</Text>
             <View style={{ flex: 1 }}>
-              {this._renderCurrentMax(item, 0)}
-              {this._renderTargetMax(item, 1)}
+              {this._renderCurrentMax(item, 0, "Bench")}
+              {this._renderTargetMax(item, 1, "Bench")}
             </View>
           </View>
         </View>
@@ -180,8 +193,8 @@ class PowerLyfting extends Component {
               Squats
             </Text>
             <View style={{ flex: 1 }}>
-              {this._renderCurrentMax(item, 2)}
-              {this._renderTargetMax(item, 3)}
+              {this._renderCurrentMax(item, 2, "Squats")}
+              {this._renderTargetMax(item, 3, "Squats")}
             </View>
           </View>
         </View>
@@ -192,8 +205,8 @@ class PowerLyfting extends Component {
               Deadlift
             </Text>
             <View style={{ flex: 1 }}>
-              {this._renderCurrentMax(item, 4)}
-              {this._renderTargetMax(item, 5)}
+              {this._renderCurrentMax(item, 4, "Deadlift")}
+              {this._renderTargetMax(item, 5, "Deadlift")}
             </View>
           </View>
         </View>
@@ -260,7 +273,7 @@ class PowerLyfting extends Component {
       return Alert.alert(
         "",
         "Please fill your info first to be able to proceed",
-        [{text:"Ok"}],
+        [{ text: "Ok" }],
         { cancelable: true }
       );
     }
@@ -292,7 +305,8 @@ class PowerLyfting extends Component {
           title: "   " + _row.title,
           value: val,
           value_unit: this.props.isMetric ? "kg" : "lb",
-          value_type: "weight"
+          value_type: "weight",
+          item_type: _row.item_type
         });
       }
     }
@@ -379,6 +393,9 @@ const mapStateToProps = ({ user, setGoal }) => {
   };
 };
 
-export default connect(mapStateToProps, {
-  onSetGoal
-})(PowerLyfting);
+export default connect(
+  mapStateToProps,
+  {
+    onSetGoal
+  }
+)(PowerLyfting);

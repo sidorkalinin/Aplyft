@@ -109,8 +109,8 @@ android {
         applicationId "com.brightlab.aplyft"
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 70
-        versionName "2.0.0"
+        versionCode 77
+        versionName "2.3.2"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

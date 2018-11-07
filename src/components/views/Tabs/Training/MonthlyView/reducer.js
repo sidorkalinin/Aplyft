@@ -12,6 +12,7 @@ var INITAL_STATE = {
 };
 
 const timeToString = date => {
+  console.log("DATE in timeToString() is : ", date);
   //const date = new Date(time);
   let formatedDate =
     date.getFullYear() +
@@ -19,7 +20,17 @@ const timeToString = date => {
     ("0" + (date.getMonth() + 1)).slice(-2) +
     "-" +
     ("0" + date.getDate()).slice(-2);
-  return formatedDate;
+  console.log("formatedDate in timeToString() is : ", formatedDate);
+  console.log(
+    "moment in timeToString() is : ",
+    moment(date).format("YYYY-MM-DD")
+  );
+  console.log(
+    "moment.utc in timeToString() is : ",
+    moment.utc(date).format("YYYY-MM-DD")
+  );
+  // return formatedDate;
+  return moment.utc(date).format("YYYY-MM-DD");
 };
 
 const refreshCalendarView = (from, to, un_loged_data, loged_data) => {
@@ -38,7 +49,8 @@ const refreshCalendarView = (from, to, un_loged_data, loged_data) => {
   for (from; from <= to; from.setDate(from.getDate() + 1)) {
     // tranforming the dates to strings
     // let formatedDate = from.getFullYear() +"-"+ ('0' + (from.getMonth()+1)).slice(-2) +"-"+ ('0' + from.getDate()).slice(-2);
-    filledArray.push(timeToString(from));
+    filledArray.push(timeToString(from)); //--------------- TO CHANGE -------------
+    // console.log("FROM IS : ", from);
   }
 
   // we will change the state but without re-rendering the view
@@ -55,7 +67,9 @@ const refreshCalendarView = (from, to, un_loged_data, loged_data) => {
     // console.log("entered fro", index);
     var item = un_loged_data[index];
     if (!item.loged) {
-      date = new Date(timeToString(item.date));
+      //date = new Date(timeToString(item.date));
+      date = moment.utc(item.date)._i;
+      // console.log("DATE in the reducer of the monthly calendar is : ", date);
 
       break;
     }
@@ -68,20 +82,33 @@ const refreshCalendarView = (from, to, un_loged_data, loged_data) => {
     // console.log("looping in items for agenda", index, item);
 
     if (_items[timeToString(item.date)].indexOf(item) < 0) {
+      //--------------- TO CHANGE -------------
       _items[timeToString(item.date)].push(item);
     }
+    //console.log("ITEM.DATE IN THE 1st one is:  ", moment.utc(item.date)._i);
+    // if (_items[moment.utc(item.date)._i].indexOf(item) < 0) {
+    //   _items[moment.utc(item.date)._i].push(item);
+    // }
   });
   //adding the unloged data and pushing their dates
   var startDate = new Date();
+  // var startDate = moment.utc();
+
   var timeDiff = startDate - date;
   var daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
   daysDiff = daysDiff < 0 ? 0 : daysDiff;
-
+  // console.log("ITEM.DATE IN THE 2nd one is:  ", item.date);
   un_loged_data.forEach((item, index) => {
     if (_items[timeToString(item.date)].indexOf(item) < 0) {
+      //--------------- TO CHANGE -------------
       _items[timeToString(item.date)].push(item);
     }
   });
+  // un_loged_data.forEach((item, index) => {
+  //   if (_items[moment.utc(item.date)._i].indexOf(item) < 0) {
+  //     _items[moment.utc(item.date)._i].push(item);
+  //   }
+  // });
 
   return _items;
 };

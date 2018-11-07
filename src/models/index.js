@@ -16,6 +16,7 @@ import PaymentModel from "./PaymentModel";
 import ChatContactsModel from "./ChatContactsModel";
 import ChatMessageModel from "./ChatMessageModel";
 import PerformanceModel from "./PerformanceModel";
+import PerformanceDataModel from "./PerformanceDataModel";
 import PerformanceSearchListModel from "./PerformanceSearchListModel";
 import SuggestTrainerModel from "./SuggestTrainerModel";
 import DailyNutritionModel from "./DailyNutritionModel";
@@ -30,7 +31,7 @@ import TrainersReviewModel from "./TrainersReviewModel";
 
 // defineing the database structure
 let realm = new Realm({
-  schemaVersion: 43,
+  schemaVersion: 45,
   schema: [
     UserModel,
     CardInfoModel,
@@ -51,6 +52,7 @@ let realm = new Realm({
     SuggestTrainerModel,
     TrainersReviewModel,
     PerformanceModel,
+    PerformanceDataModel,
     PerformanceSearchListModel,
     DailyNutritionModel,
     ProgressGalleryModel,

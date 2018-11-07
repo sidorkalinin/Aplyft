@@ -1,9 +1,9 @@
 import React, { PureComponent } from "react";
 import { Alert } from "react-native";
-import CryptoJS from 'crypto-js';
-import axios from 'axios';
+import CryptoJS from "crypto-js";
+import axios from "axios";
 import moment from "moment";
-import realm from '../../../../../../models';
+import realm from "../../../../../../models";
 import {
   View,
   Text,
@@ -25,17 +25,17 @@ import {
   goto_AddMeal,
   loadDailyNutritionRealm
 } from "./actions";
-import { addMeal } from './components/MealNutritionPage/actions';
+import { addMeal } from "./components/MealNutritionPage/actions";
 import { colors } from "../../../../../styles/theme";
 import Styles from "./styles";
 import { Button } from "./../../../../../common";
 import DailyNutritionListItem from "./components/DailyNutritionListItem";
 
 // fatsecret api params
-var OAUTH_CONSUMER_KEY = 'c16c5c08ecac46fb9c5945f36ba58a1c';
-var OAUTH_SIGNATURE_METHOD = 'HMAC-SHA1';
-var OAUTH_VERSION = '1.0';
-var REQUEST_METHOD = 'GET';
+var OAUTH_CONSUMER_KEY = "c16c5c08ecac46fb9c5945f36ba58a1c";
+var OAUTH_SIGNATURE_METHOD = "HMAC-SHA1";
+var OAUTH_VERSION = "1.0";
+var REQUEST_METHOD = "GET";
 
 class DailyNutritionScreen extends PureComponent {
   constructor(props) {
@@ -44,7 +44,7 @@ class DailyNutritionScreen extends PureComponent {
     this.state = {
       refreshing: false,
       isFatsecretUserAuthInProcess: false,
-      fatsecretUserAuthParams: ''
+      fatsecretUserAuthParams: ""
     };
     // loading nutrition data list
     this.counter = 0;
@@ -64,193 +64,235 @@ class DailyNutritionScreen extends PureComponent {
   _onPressImportFromFatsecret = () => {
     var fatsecretAuthToken = realm.objects("UserModel")[0].fatsecretAuthToken;
     var fatsecretAuthSecret = realm.objects("UserModel")[0].fatsecretAuthSecret;
-
     if (fatsecretAuthToken) {
-      this.importFood({authToken: fatsecretAuthToken, authSecret: fatsecretAuthSecret});
+      this.importFood({
+        authToken: fatsecretAuthToken,
+        authSecret: fatsecretAuthSecret
+      });
     } else {
       this.perform3LeggedOauthAuthentication();
     }
-  }
+  };
 
   perform3LeggedOauthAuthentication = () => {
     this.obtainRequestToken()
       .then(response => {
-        this.setState({ fatsecretUserAuthParams: response.data }, this._showModal);
+        this.setState(
+          { fatsecretUserAuthParams: response.data },
+          this._showModal
+        );
       })
       .catch(error => {
-        debugger
+        console.log("Erorr in the  perform3LeggedOauthAuthentication ", error);
       });
-  }
+  };
 
-  _showModal = () => this.setState({ isFatsecretUserAuthInProcess: true })
-  _hideModal = () => this.setState({ isFatsecretUserAuthInProcess: false })
+  _showModal = () => this.setState({ isFatsecretUserAuthInProcess: true });
+  _hideModal = () => this.setState({ isFatsecretUserAuthInProcess: false });
 
   obtainRequestToken = async () => {
-    var REQUEST_TOKEN_URL = 'http://www.fatsecret.com/oauth/request_token';
+    var REQUEST_TOKEN_URL = "http://www.fatsecret.com/oauth/request_token";
     var OAUTH_TIMESTAMP = new Date().getTime();
-    var OAUTH_NONCE = ''+new Date().getTime();
-    var SHARED_SECRET = '1f65134b262647d5850ec4d50d269c24';
+    var OAUTH_NONCE = "" + new Date().getTime();
+    var SHARED_SECRET = "1f65134b262647d5850ec4d50d269c24";
 
-
-    var a = encodeURIComponent('https://app.aplyft.com/fat_secret/?user_id=3&token=123123&platform='+Platform.OS);
-    var NORMALISED_PARAMETERS = 'oauth_callback='+a;
-    NORMALISED_PARAMETERS += '&oauth_consumer_key='+OAUTH_CONSUMER_KEY;
-    NORMALISED_PARAMETERS += '&oauth_nonce='+OAUTH_NONCE;
-    NORMALISED_PARAMETERS += '&oauth_signature_method='+OAUTH_SIGNATURE_METHOD;
-    NORMALISED_PARAMETERS += '&oauth_timestamp='+OAUTH_TIMESTAMP;
-    NORMALISED_PARAMETERS += '&oauth_version='+OAUTH_VERSION;
+    let user = realm.objects("UserModel")[0];
+    var a = encodeURIComponent(
+      "https://appx.aplyft.com/api/fat_secret/?user_id=" +
+        user.id +
+        "&token=" +
+        user.token +
+        "&platform=" +
+        Platform.OS
+    );
+    var NORMALISED_PARAMETERS = "oauth_callback=" + a;
+    NORMALISED_PARAMETERS += "&oauth_consumer_key=" + OAUTH_CONSUMER_KEY;
+    NORMALISED_PARAMETERS += "&oauth_nonce=" + OAUTH_NONCE;
+    NORMALISED_PARAMETERS +=
+      "&oauth_signature_method=" + OAUTH_SIGNATURE_METHOD;
+    NORMALISED_PARAMETERS += "&oauth_timestamp=" + OAUTH_TIMESTAMP;
+    NORMALISED_PARAMETERS += "&oauth_version=" + OAUTH_VERSION;
 
     var REQUEST_URL_ENCODED = encodeURIComponent(REQUEST_TOKEN_URL);
-    var NORMALISED_PARAMETERS_ENCODED = encodeURIComponent(NORMALISED_PARAMETERS);
+    var NORMALISED_PARAMETERS_ENCODED = encodeURIComponent(
+      NORMALISED_PARAMETERS
+    );
     var BASE_STRING = `${REQUEST_METHOD}&${REQUEST_URL_ENCODED}&${NORMALISED_PARAMETERS_ENCODED}`;
 
-    SHARED_SECRET+='&'; // no user, & needed
+    SHARED_SECRET += "&"; // no user, & needed
     var OAUTH_SIGNATURE = CryptoJS.HmacSHA1(BASE_STRING, SHARED_SECRET);
     var OAUTH_SIGNATURE_BASE64 = CryptoJS.enc.Base64.stringify(OAUTH_SIGNATURE);
-    var OAUTH_SIGNATURE_BASE64_ENCODED = encodeURIComponent(OAUTH_SIGNATURE_BASE64);
+    var OAUTH_SIGNATURE_BASE64_ENCODED = encodeURIComponent(
+      OAUTH_SIGNATURE_BASE64
+    );
 
     var OAUTH_REQUEST_URL = `${REQUEST_TOKEN_URL}?${NORMALISED_PARAMETERS}&oauth_signature=${OAUTH_SIGNATURE_BASE64_ENCODED}`;
 
-    return axios.get(OAUTH_REQUEST_URL)
-      .then(response => response);
-  }
+    return axios.get(OAUTH_REQUEST_URL).then(response => response);
+  };
 
-  obtainAccessToken = (params) => {
-    var ACCESS_TOKEN_URL = 'http://www.fatsecret.com/oauth/access_token';
+  obtainAccessToken = params => {
+    var ACCESS_TOKEN_URL = "http://www.fatsecret.com/oauth/access_token";
     var OAUTH_TIMESTAMP = new Date().getTime();
-    var OAUTH_NONCE = ''+new Date().getTime();
-    var SHARED_SECRET = '1f65134b262647d5850ec4d50d269c24';
+    var OAUTH_NONCE = "" + new Date().getTime();
+    var SHARED_SECRET = "1f65134b262647d5850ec4d50d269c24";
 
-    var NORMALISED_PARAMETERS = 'oauth_consumer_key='+OAUTH_CONSUMER_KEY;
-    NORMALISED_PARAMETERS += '&oauth_nonce='+OAUTH_NONCE;
-    NORMALISED_PARAMETERS += '&oauth_signature_method='+OAUTH_SIGNATURE_METHOD;
-    NORMALISED_PARAMETERS += '&oauth_timestamp='+OAUTH_TIMESTAMP;
-    NORMALISED_PARAMETERS += '&oauth_token='+params.oauth_token;
-    NORMALISED_PARAMETERS += '&oauth_verifier='+params.oauth_verifier;
-    NORMALISED_PARAMETERS += '&oauth_version='+OAUTH_VERSION;
+    var NORMALISED_PARAMETERS = "oauth_consumer_key=" + OAUTH_CONSUMER_KEY;
+    NORMALISED_PARAMETERS += "&oauth_nonce=" + OAUTH_NONCE;
+    NORMALISED_PARAMETERS +=
+      "&oauth_signature_method=" + OAUTH_SIGNATURE_METHOD;
+    NORMALISED_PARAMETERS += "&oauth_timestamp=" + OAUTH_TIMESTAMP;
+    NORMALISED_PARAMETERS += "&oauth_token=" + params.oauth_token;
+    NORMALISED_PARAMETERS += "&oauth_verifier=" + params.oauth_verifier;
+    NORMALISED_PARAMETERS += "&oauth_version=" + OAUTH_VERSION;
 
     var REQUEST_URL_ENCODED = encodeURIComponent(ACCESS_TOKEN_URL);
-    var NORMALISED_PARAMETERS_ENCODED = encodeURIComponent(NORMALISED_PARAMETERS);
+    var NORMALISED_PARAMETERS_ENCODED = encodeURIComponent(
+      NORMALISED_PARAMETERS
+    );
     var BASE_STRING = `${REQUEST_METHOD}&${REQUEST_URL_ENCODED}&${NORMALISED_PARAMETERS_ENCODED}`;
-    var oauthSecretToken = this.state.fatsecretUserAuthParams.split('&')[2].split('=')[1]
-    SHARED_SECRET+='&'+oauthSecretToken; // no user, & needed
+    var oauthSecretToken = this.state.fatsecretUserAuthParams
+      .split("&")[2]
+      .split("=")[1];
+    SHARED_SECRET += "&" + oauthSecretToken; // no user, & needed
     var OAUTH_SIGNATURE = CryptoJS.HmacSHA1(BASE_STRING, SHARED_SECRET);
     var OAUTH_SIGNATURE_BASE64 = CryptoJS.enc.Base64.stringify(OAUTH_SIGNATURE);
-    var OAUTH_SIGNATURE_BASE64_ENCODED = encodeURIComponent(OAUTH_SIGNATURE_BASE64);
+    var OAUTH_SIGNATURE_BASE64_ENCODED = encodeURIComponent(
+      OAUTH_SIGNATURE_BASE64
+    );
 
     var OAUTH_REQUEST_URL = `${ACCESS_TOKEN_URL}?${NORMALISED_PARAMETERS}&oauth_signature=${OAUTH_SIGNATURE_BASE64_ENCODED}`;
 
-    return axios.get(OAUTH_REQUEST_URL)
+    return axios
+      .get(OAUTH_REQUEST_URL)
       .then(response => {
-        var authToken = response.data.split('&')[0].split('=')[1]
-        var authSecret = response.data.split('&')[1].split('=')[1]
+        console.log(
+          "The response.data in the OAUTH_REQUEST_URL is : ",
+          response.data
+        );
+        var authToken = response.data.split("&")[0].split("=")[1];
+        var authSecret = response.data.split("&")[1].split("=")[1];
         this.importFood({
           authToken,
           authSecret
         });
 
         realm.write(() => {
-          realm.create("UserModel", {
-            fatsecretAuthToken: authToken,
-            fatsecretAuthSecret: authSecret,
-            id: realm.objects("UserModel")[0].id,
-          }, true);
-        })
+          realm.create(
+            "UserModel",
+            {
+              fatsecretAuthToken: authToken,
+              fatsecretAuthSecret: authSecret,
+              id: realm.objects("UserModel")[0].id
+            },
+            true
+          );
+        });
       })
       .catch(error => {
-        debugger
+        console.log("Error in the oauth_token is the following :  ", error);
+        console.log(
+          "Error.response in the oauth_token is the following :  ",
+          error.response
+        );
       });
-  }
+  };
 
-  importFood = (userSecrets) => {
-    const authSecret = 'ea12df2f07644606b3017061c6eed82f'
-    const authToken = '1d5e4309592e4b1bb104522ac597f2d4'
+  importFood = userSecrets => {
+    const authSecret = "ea12df2f07644606b3017061c6eed82f";
+    const authToken = "1d5e4309592e4b1bb104522ac597f2d4";
     /////
-    var METHOD = 'food_entries.get';
-    var REQUEST_URL = 'http://platform.fatsecret.com/rest/server.api';
+    var METHOD = "food_entries.get";
+    var REQUEST_URL = "http://platform.fatsecret.com/rest/server.api";
     var OAUTH_TIMESTAMP = new Date().getTime();
-    var OAUTH_NONCE = ''+new Date().getTime();
-    var SHARED_SECRET = '1f65134b262647d5850ec4d50d269c24';
+    var OAUTH_NONCE = "" + new Date().getTime();
+    var SHARED_SECRET = "1f65134b262647d5850ec4d50d269c24";
 
     //   // Optional
-    var FORMAT = 'json';
+    var FORMAT = "json";
 
     // Create a Signature Base String
     var REQUEST_URL_ENCODED = encodeURIComponent(REQUEST_URL);
     // var NORMALISED_PARAMETERS = 'food_id='+3093;
-    var startOfDay = Math.round(moment().startOf('day') / (1000 * 60 * 60 * 24));
-    var NORMALISED_PARAMETERS = 'date='+startOfDay;
-    NORMALISED_PARAMETERS += '&format='+FORMAT;
-    NORMALISED_PARAMETERS += '&method='+METHOD;
-    NORMALISED_PARAMETERS += '&oauth_consumer_key='+OAUTH_CONSUMER_KEY;
-    NORMALISED_PARAMETERS += '&oauth_nonce='+OAUTH_NONCE;
-    NORMALISED_PARAMETERS += '&oauth_signature_method='+OAUTH_SIGNATURE_METHOD;
-    NORMALISED_PARAMETERS += '&oauth_timestamp='+OAUTH_TIMESTAMP;
-    NORMALISED_PARAMETERS += '&oauth_token='+userSecrets.authToken;
-    NORMALISED_PARAMETERS += '&oauth_version='+OAUTH_VERSION;
+    var startOfDay = Math.round(
+      moment().startOf("day") / (1000 * 60 * 60 * 24)
+    );
+    var NORMALISED_PARAMETERS = "date=" + startOfDay;
+    NORMALISED_PARAMETERS += "&format=" + FORMAT;
+    NORMALISED_PARAMETERS += "&method=" + METHOD;
+    NORMALISED_PARAMETERS += "&oauth_consumer_key=" + OAUTH_CONSUMER_KEY;
+    NORMALISED_PARAMETERS += "&oauth_nonce=" + OAUTH_NONCE;
+    NORMALISED_PARAMETERS +=
+      "&oauth_signature_method=" + OAUTH_SIGNATURE_METHOD;
+    NORMALISED_PARAMETERS += "&oauth_timestamp=" + OAUTH_TIMESTAMP;
+    NORMALISED_PARAMETERS += "&oauth_token=" + userSecrets.authToken;
+    NORMALISED_PARAMETERS += "&oauth_version=" + OAUTH_VERSION;
 
     NORMALISED_PARAMETERS_ENCODED = encodeURIComponent(NORMALISED_PARAMETERS);
 
     var BASE_STRING = `${REQUEST_METHOD}&${REQUEST_URL_ENCODED}&${NORMALISED_PARAMETERS_ENCODED}`;
 
     // Calculate the Signature value
-    var oauthSecretToken = userSecrets.authSecret
-    SHARED_SECRET+='&'+oauthSecretToken; // no user, & needed
+    var oauthSecretToken = userSecrets.authSecret;
+    SHARED_SECRET += "&" + oauthSecretToken; // no user, & needed
 
     var OAUTH_SIGNATURE = CryptoJS.HmacSHA1(BASE_STRING, SHARED_SECRET);
 
     var OAUTH_SIGNATURE_BASE64 = CryptoJS.enc.Base64.stringify(OAUTH_SIGNATURE);
 
-    var OAUTH_SIGNATURE_BASE64_ENCODED = encodeURIComponent(OAUTH_SIGNATURE_BASE64);
+    var OAUTH_SIGNATURE_BASE64_ENCODED = encodeURIComponent(
+      OAUTH_SIGNATURE_BASE64
+    );
 
     var OAUTH_REQUEST_URL = `${REQUEST_URL}?${NORMALISED_PARAMETERS}&oauth_signature=${OAUTH_SIGNATURE_BASE64_ENCODED}`;
     // Send the Request
 
-    axios.get(OAUTH_REQUEST_URL)
+    axios
+      .get(OAUTH_REQUEST_URL)
       .then(response => {
         if (response.data.food_entries) {
           if (Array.isArray(response.data.food_entries.food_entry)) {
             response.data.food_entries.food_entry.forEach((meal, index) => {
               setTimeout(() => {
                 this.props.addMeal({
-                  mealtitle: meal.meal,
+                  mealtitle: meal.food_entry_name,
                   workout_date: new Date(),
                   totalCalories: meal.calories,
                   proteinValue: meal.protein,
                   carbsValue: meal.carbohydrate,
                   fatsValue: meal.fat,
                   fiberValue: meal.fiber,
-                  sugarValue:meal.sugar,
+                  sugarValue: meal.sugar,
                   cholesterolValue: meal.cholesterol,
                   sodiumValue: meal.sodium,
                   waterValue: meal.water
-                })
-              }, 1000 * index)
-            })
+                });
+              }, 1000 * index);
+            });
           } else {
             const meal = response.data.food_entries.food_entry;
             this.props.addMeal({
-              mealtitle: meal.meal,
+              mealtitle: meal.food_entry_name,
               workout_date: new Date(),
               totalCalories: meal.calories,
               proteinValue: meal.protein,
               carbsValue: meal.carbohydrate,
               fatsValue: meal.fat,
               fiberValue: meal.fiber,
-              sugarValue:meal.sugar,
+              sugarValue: meal.sugar,
               cholesterolValue: meal.cholesterol,
               sodiumValue: meal.sodium,
               waterValue: meal.water
-            })
+            });
           }
         }
         console.log(response);
         this.setState({ isFatsecretUserAuthInProcess: false });
       })
       .catch(error => {
-        console.log(error)
-      })
-  }
+        console.log(error);
+      });
+  };
 
   //////////////////
 
@@ -358,11 +400,14 @@ class DailyNutritionScreen extends PureComponent {
           flexDirection: "column"
         }}
       >
-      <TouchableOpacity onPress={this._onPressImportFromFatsecret} style={{ backgroundColor: 'green', padding: 15 }}>
-        <Text style={{ color: 'white', textAlign: 'center' }}>
-          Import from fatsecret
-        </Text>
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={this._onPressImportFromFatsecret}
+          style={{ backgroundColor: "green", padding: 15 }}
+        >
+          <Text style={{ color: "white", textAlign: "center" }}>
+            Import from fatsecret
+          </Text>
+        </TouchableOpacity>
 
         <View style={Styles.HeaderTitleContainer}>
           <View style={{ flex: 1.05, marginLeft: 15 }}>
@@ -558,18 +603,25 @@ class DailyNutritionScreen extends PureComponent {
         <Modal
           animationType="slide"
           transparent={false}
-          visible={this.state.isFatsecretUserAuthInProcess}>
-          <SafeAreaView style={{flex: 1}}>
+          visible={this.state.isFatsecretUserAuthInProcess}
+        >
+          <SafeAreaView style={{ flex: 1 }}>
             <View>
               <Text
                 style={{ padding: 20 }}
-                onPress={() => this.setState({ isFatsecretUserAuthInProcess: false })}
+                onPress={() =>
+                  this.setState({ isFatsecretUserAuthInProcess: false })
+                }
               >
                 Close
               </Text>
             </View>
             <WebView
-              source={{ uri: `http://www.fatsecret.com/oauth/authorize?${this.state.fatsecretUserAuthParams}` }}
+              source={{
+                uri: `http://www.fatsecret.com/oauth/authorize?${
+                  this.state.fatsecretUserAuthParams
+                }`
+              }}
               onMessage={event => {
                 const response = JSON.parse(event.nativeEvent.data);
                 this.obtainAccessToken(response);

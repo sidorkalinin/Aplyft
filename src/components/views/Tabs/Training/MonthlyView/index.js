@@ -45,6 +45,7 @@ class myTrainingTabScreen extends Component {
 
   render() {
     let knob = <View style={styles.knobContainer} />;
+    console.log("ITEMs in agenda is  : ", this.props.items);
     return (
       <Agenda
         items={this.props.items}
