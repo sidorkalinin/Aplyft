@@ -11,6 +11,9 @@ import {
   TouchableOpacity,
   FlatList
 } from "react-native";
+import { ShareDialog } from 'react-native-fbsdk';
+
+import ViewShot from "react-native-view-shot";
 import { connect } from "react-redux";
 import { Button } from "../../../../components/common";
 import styles from "./styles";
@@ -105,14 +108,37 @@ class PerformancePage extends Component {
       handleExportPress: this._exportButtonPressed
     });
   }
+
   _shareButtonPressed = () => {
-    let shareOptions = {
-      title: "APLYFT",
-      message: "Share performance test",
-      url: "http://facebook.github.io/react-native",
-      subject: "Share performance"
-    };
-    Share.open(shareOptions);
+    this.refs.viewShot.capture().then(uri => {
+      console.log("do something with ", uri);
+      const photoUri = 'file://' + uri;
+
+      const sharePhotoContent = {
+        contentType: 'photo',
+        photos: [{ imageUrl: photoUri,   userGenerated: true }],
+      }
+
+      ShareDialog.canShow(sharePhotoContent).then(
+        function(canShow) {
+          if (canShow) {
+            return ShareDialog.show(sharePhotoContent);
+          }
+        }
+      ).then(result => {
+          if (!result) alert("Please download Facebook app to your device to share on Facebook");
+          // if (result.isCancelled) {
+            // alert('Share cancelled');
+          // } else {
+            // alert('Share success with postId: '
+              // + result.postId);
+          // }
+        },
+        function(error) {
+          alert('Share fail with error: ' + error);
+        }
+      );
+    });
   };
 
   _exportButtonPressed = () => {
@@ -823,6 +849,7 @@ class PerformancePage extends Component {
               backgroundColor: "#eeeeee"
             }}
           />
+          <ViewShot ref='viewShot' options={{ format: "png", quality: 0.9 }}>
           <View
             style={{
               flex: 1,
@@ -891,6 +918,7 @@ class PerformancePage extends Component {
               </View>
             </View>
           </View>
+          </ViewShot>
 
           {/*	 <View style={styles.resetButtonContainer}>
 		            	<Button onPress={this._onResetPress.bind(this)}>
