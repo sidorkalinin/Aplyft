@@ -3,6 +3,7 @@ package com.brightlab.aplyft;
 import android.app.Application;
 import com.facebook.CallbackManager;
 import com.facebook.react.ReactApplication;
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 import cl.json.RNSharePackage;
 import com.wog.videoplayer.VideoPlayerPackage;
 import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
@@ -52,6 +53,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
             new MainReactPackage(),
+            new RNViewShotPackage(),
             new RNSharePackage(),
             new VideoPlayerPackage(),
             new ReactNativePushNotificationPackage(),
