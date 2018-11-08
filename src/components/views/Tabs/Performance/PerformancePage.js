@@ -9,7 +9,8 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   TouchableOpacity,
-  FlatList
+  FlatList,
+  TouchableHighlight
 } from "react-native";
 import { ShareDialog } from 'react-native-fbsdk';
 
@@ -45,7 +46,7 @@ import {
   Defs,
   Text as ChartText
 } from "react-native-svg";
-import Share from "react-native-share";
+import Share, {ShareSheet, Button as ShareSheetButton} from 'react-native-share';
 
 class PerformancePage extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -81,7 +82,8 @@ class PerformancePage extends Component {
     this.state = {
       refreshing: false,
       addnewInput: false,
-      refreshedPage: false
+      refreshedPage: false,
+      isShareSheetVisible: false
     };
   }
 
@@ -109,7 +111,15 @@ class PerformancePage extends Component {
     });
   }
 
+  _onCancelShareSheet = () => {
+    this.setState({ isShareSheetVisible: false });
+  }
+
   _shareButtonPressed = () => {
+    this.setState({ isShareSheetVisible: true })
+  };
+
+  _shareOnFacebook = () => {
     this.refs.viewShot.capture().then(uri => {
       console.log("do something with ", uri);
       const photoUri = 'file://' + uri;
@@ -139,7 +149,22 @@ class PerformancePage extends Component {
         }
       );
     });
-  };
+  }
+
+  _shareOnInstagram = () => {
+    this.refs.viewShot.capture()
+      .then(uri => {
+        console.log("do something with ", uri);
+        const photoUri = 'file://' + uri;
+        let encodedURL = encodeURIComponent(photoUri);
+        let instagramURL = `instagram://library?AssetPath=${encodedURL}`;
+        try {
+          Linking.openURL(instagramURL);
+        } catch (e) {
+          alert('Please make sure you have installed instagram app to your phone')
+        }
+    });
+  }
 
   _exportButtonPressed = () => {
     const exportURL =
@@ -938,6 +963,41 @@ class PerformancePage extends Component {
             />
           </View>
         </ScrollView>
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.isShareSheetVisible}>
+          <View style={{backgroundColor: 'rgba(0, 0, 0, 0.8)', flex: 1}}>
+            <View>
+              <TouchableHighlight
+                onPress={this._onCancelShareSheet}>
+                <Text style={{ color: 'white', marginTop: 50, marginLeft: 10 }}>Close</Text>
+              </TouchableHighlight>
+            </View>
+
+            <View style={{ flex: 1 }} />
+
+            <View style={{ backgroundColor: 'white', padding: 15 }}>
+              <View>
+                <View style={{ height: 35 }}>
+                  <Button onPress={this._shareOnFacebook}>
+                    Share on Facebook
+                  </Button>
+                </View>
+
+                <View style={{ height: 12 }} />
+
+                <View style={{ height: 35 }}>
+                  <Button onPress={this._shareOnInstagram}>
+                    Share on Instagram
+                  </Button>
+                </View>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
       </KeyboardAvoidingView>
     );
   }
