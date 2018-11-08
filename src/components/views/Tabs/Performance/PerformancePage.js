@@ -10,7 +10,9 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   FlatList,
-  TouchableHighlight
+  TouchableHighlight,
+  Linking,
+  CameraRoll
 } from "react-native";
 import { ShareDialog } from 'react-native-fbsdk';
 
@@ -156,13 +158,19 @@ class PerformancePage extends Component {
       .then(uri => {
         console.log("do something with ", uri);
         const photoUri = 'file://' + uri;
-        let encodedURL = encodeURIComponent(photoUri);
-        let instagramURL = `instagram://library?AssetPath=${encodedURL}`;
-        try {
-          Linking.openURL(instagramURL);
-        } catch (e) {
-          alert('Please make sure you have installed instagram app to your phone')
-        }
+        // let encodedURL = encodeURIComponent(photoUri);
+        CameraRoll.saveToCameraRoll(photoUri)
+          .then(() => {
+            let instagramURL = `instagram://library?AssetPath=${photoUri}`;
+            try {
+              Linking.openURL(instagramURL);
+            } catch (e) {
+              alert('Please make sure you have installed instagram app to your phone')
+            }
+          })
+          .catch((error) => {
+            debugger
+          });
     });
   }
 
